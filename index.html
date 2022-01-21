@@ -1,0 +1,177 @@
+<!-- @TODO: ADD MOBILE SUPPORT (touchmove) -->
+<style>
+body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #222;
+}
+#wrapper {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+canvas {
+    max-width: 400px;
+    max-height: 400px;
+    background: #111;
+    -webkit-box-shadow: 0px 0px 15px 5px #000000; 
+    box-shadow: 0px 0px 15px 5px #000000;
+}
+</style>
+
+
+<script>
+    // @SOURCE: https://medium.com/@bantic/hand-coding-a-color-wheel-with-canvas-78256c9d7d43
+    // hue in range [0, 360]
+    // saturation, value in range [0,1]
+    // return [r,g,b] each in range [0,255]
+    // See: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+    function hsv2rgb(hue, saturation, value) {
+        let chroma = value * saturation;
+        let hue1 = hue / 60;
+        let x = chroma * (1- Math.abs((hue1 % 2) - 1));
+        let r1, g1, b1;
+        if (hue1 >= 0 && hue1 <= 1) {
+          ([r1, g1, b1] = [chroma, x, 0]);
+        } else if (hue1 >= 1 && hue1 <= 2) {
+          ([r1, g1, b1] = [x, chroma, 0]);
+        } else if (hue1 >= 2 && hue1 <= 3) {
+          ([r1, g1, b1] = [0, chroma, x]);
+        } else if (hue1 >= 3 && hue1 <= 4) {
+          ([r1, g1, b1] = [0, x, chroma]);
+        } else if (hue1 >= 4 && hue1 <= 5) {
+          ([r1, g1, b1] = [x, 0, chroma]);
+        } else if (hue1 >= 5 && hue1 <= 6) {
+          ([r1, g1, b1] = [chroma, 0, x]);
+        }
+
+        let m = value - chroma;
+        let [r,g,b] = [r1+m, g1+m, b1+m];
+
+        // Change r,g,b values from [0,1] to [0,255]
+        return [255*r,255*g,255*b];
+    }
+    
+    var HUE = 0;
+        HUE_STEPS = 20;
+    var COLORARRAY = [];
+    var COLOR_INDEX = 0;
+    
+    for (HUE = 0; HUE <= 360; HUE+=HUE_STEPS) {
+        COLORARRAY.push(hsv2rgb(HUE, .80, 1));
+    }
+    COLORARRAY.push([0,0,0]);
+    COLORARRAY.push([255,255,255]);
+    
+    function circleColor(color) {
+        <!-- console.log(color) -->
+        <!-- if (color[0] == 0 && color[1] == 0 && color[2] == 0) { -->
+            if (++COLOR_INDEX >= COLORARRAY.length) COLOR_INDEX = 0;
+            return COLORARRAY[COLOR_INDEX];
+        <!-- } -->
+        <!-- if (color[0] == 0 && color[1] == 0 && color[2] == 0) return COLORARRAY[0]; -->
+        <!-- for (let i = 0; i < (COLORARRAY.length - 1); ++i) { -->
+            <!-- if (parseInt(color[0]) == parseInt(COLORARRAY[i][0]) && -->
+                <!-- parseInt(color[1]) == parseInt(COLORARRAY[i][1]) && -->
+                <!-- parseInt(color[2]) == parseInt(COLORARRAY[i][2])) { -->
+                <!-- return COLORARRAY[i + 1] -->
+            <!-- } -->
+        <!-- } -->
+        
+        <!-- return COLORARRAY[0] -->
+        return color
+    }
+    
+    
+    // @SOURCE: https://stackoverflow.com/a/67723999/10495683
+    var canvas, ctx, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
+
+    var x = 'rgb(' + COLORARRAY[0].join(', ') + ')',
+        y = 3;
+        
+    function init() {
+        canvas = document.getElementById('can');
+        ctx = canvas.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
+
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
+    }
+     
+    function draw() {
+        <!-- let color = ctx.getImageData(currX, currY, 1, 1).data; -->
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        <!-- ctx.strokeStyle = x; -->
+        <!-- let tmp = circleColor(color); -->
+        <!-- ctx.strokeStyle = 'rgb(' + tmp.join(', ') + ')'; -->
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+        <!-- ctx.strokeStyle = COLORARRAY[0]; -->
+    }
+
+    function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.getBoundingClientRect().left;
+            currY = e.clientY - canvas.getBoundingClientRect().top;
+
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                let color = ctx.getImageData(currX, currY, 1, 1).data;
+                let tmp = circleColor(color);
+                let tmpColor = 'rgb(' + tmp.join(', ') + ')';
+                ctx.fillStyle = tmpColor
+                ctx.strokeStyle = tmpColor
+                <!-- ctx.fillStyle = x; -->
+                ctx.fillRect(currX, currY, 2, 2);
+                <!-- ctx.fillStyle = COLORARRAY[0]; -->
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.getBoundingClientRect().left;
+                currY = e.clientY - canvas.getBoundingClientRect().top;
+                draw();
+            }
+        }
+    }
+</script>
+
+<body onload="init()">
+<div id="wrapper">
+<canvas id="can" width="400" height="400">Below you can write:</canvas>
+</div>
+</body>

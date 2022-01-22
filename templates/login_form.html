@@ -1,8 +1,24 @@
-<form action="/login" method="post">
-    <input type="text" name="name">
-    <input type="password" name="password">
-    <input type="submit" value="Login">
-</form>
-{% if vars: %}
-    <div>{{vars['error']}}</div>
-{% endif %}
+{% extends "base.html" %}
+{% block content %}
+    <body>
+        <div id="wrapper">
+            <div>
+                <h1 class="title">Admin</h1>
+            </div>
+            <div class="login-form">
+                <form action="/login" method="post" autocomplete="off">
+                    <input type="text" name="name" autofocus>
+                    <input type="password" name="password">
+                    <input type="submit" value="login">
+                </form>
+                <div class="alerts">
+                    <ul>
+                        {% for alert in  alerts: %}
+                            <li class="{{alert[0]}}"><span>{{alert[0]}}</span>{{alert[1]}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+{% endblock %}

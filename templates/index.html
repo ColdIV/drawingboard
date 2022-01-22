@@ -1,24 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>    
-        <!-- @TODO: ADD MOBILE SUPPORT (touchmove) -->
-        <!-- @TODO: https://stackoverflow.com/questions/13198131/how-to-save-an-html5-canvas-as-an-image-on-a-server -->
-        <meta name="viewport" content="width=device-width, initial-scale=0.8">
-        
-        <link rel="apple-touch-icon" sizes="180x180" href="static/images/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon-16x16.png">
-        <link rel="manifest" href="static/images/site.webmanifest">
-        
-        <title>Drawing Board</title>
-        
-        <link rel="stylesheet" type="text/css" href="static/style.css">
-    </head>
-
+{% extends "base.html" %}
+{% block content %}
     <body onload="init()">
         <div id="wrapper">
             <canvas id="can" width="400" height="400">Below you can write:</canvas>
-            <div>
+            <div class="info">
                 <div>
                     <a href="#" target="_blank">
                         <img src="static/images/github.png" height="28px">
@@ -31,6 +16,13 @@
                     <button id="clearButton">clear</button>
                     <button id="saveButton">save</button>
                 </div>
+                <div class="alerts">
+                    <ul>
+                        {% for alert in  alerts: %}
+                            <li><span class="{{alert[0]}}">{{alert[0]}}</span>{{alert[1]}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         <div id="toggleCanvas" class="show">
@@ -42,4 +34,4 @@
 
         <script async src="static/script.js"></script>
     </body>
-</html>
+{% endblock %}

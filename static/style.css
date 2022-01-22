@@ -25,6 +25,7 @@ a {
     justify-content: center;
     align-items: center;
     flex-flow: column;
+    position: relative;
 }
 
 #wrapper > div {
@@ -125,4 +126,135 @@ canvas {
     width: 150px;
     height: 20px;
     background: rgb(255, 119, 51);
+}
+
+.login-form {
+    position: relative;
+}
+
+.login-form input[type=text], 
+.login-form input[type=password] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+    background-color: #111;
+    color: #ccc;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+
+    transition: background-color .25s, color .25s;
+}
+
+.login-form input[type=text]:active, 
+.login-form input[type=text]:focus, 
+.login-form input[type=password]:active,
+.login-form input[type=password]:focus {
+    background-color: #000;
+    color: #bbb;
+
+    transition: background-color .25s, color .25s;
+}
+
+.login-form input[type=submit] {
+    float: right;
+    padding: 8px 16px;
+    background-color: #111;
+    color: #ccc;
+    border: 0;
+    outline: none;
+    cursor: pointer;
+    font-family: Verdana, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 1;
+    
+    transition: background-color .25s, color .25s;
+}
+
+.login-form input[type=submit]:hover {
+    background-color: #000;
+    color: #bbb;
+    
+    transition: background-color .25s, color .25s;
+}
+
+.login-form input[type=submit]:active {
+    background-color: #252525;
+    color: #ddd;
+    
+    transition: background-color .25s, color .25s;
+}
+
+.info {
+    position: relative;
+}
+
+.alerts {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+}
+
+.alerts ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.alerts ul li {
+    width: 100%;
+    background: #111;
+    color: #888;
+    border-radius: 3px;
+    padding: 8px 16px;
+    box-sizing: border-box;
+    
+    text-align: center;
+    font-family: Verdana, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 1;
+    margin: 0;
+    margin-bottom: 4px;
+
+    animation: fadein .5s;
+}
+
+.alerts ul li.fadeout {
+    animation: fadeout .5s;
+    opacity: 0;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+.alerts ul li.error {
+    background: rgb(146, 11, 11);
+    color: #ccc;
+}
+
+.alerts ul li.success {
+    background: rgb(9, 129, 5);
+    color: #ccc;
+}
+
+.alerts ul li span {
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+.title {
+    font-family: 20px;
+    color: #ccc;
+    font-family: Verdana, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 1;
+    margin: 0;
 }

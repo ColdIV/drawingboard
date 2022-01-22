@@ -143,8 +143,23 @@ function toggleCanvas (e) {
     return false;
 }
 
+function alert(text) {
+    let alerts = document.querySelector('.alerts ul')
+    let alert = document.createElement('li')
+    alert.innerHTML = text
+    alerts.prepend(alert)
+    setTimeout(() => {
+        alert.classList.add('fadeout')
+        setTimeout(() => {
+            alerts.removeChild(alert)
+        }, 500)
+    }, 2000)
+}
+
+
 function clearCanvas () {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    alert('canvas cleared')
 }
 
 ['click', 'touch'].forEach(function(e) {

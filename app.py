@@ -66,9 +66,9 @@ def login():
             login_user(admin)
             return redirect(url_for('admin.index'))
     
-    vars = {}
-    vars['error'] = "Error! Login is invalid."
-    return render_template('login_form.html', vars=vars)
+    alerts = []
+    alerts.append(["error","login is invalid."])
+    return render_template('login_form.html', alerts=alerts)
 
 @app.route('/logout')
 @login_required

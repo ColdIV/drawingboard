@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <!-- @TODO: ADD MOBILE SUPPORT (touchmove) -->
+        <!-- @TODO: https://stackoverflow.com/questions/13198131/how-to-save-an-html5-canvas-as-an-image-on-a-server -->
+        <meta name="viewport" content="width=device-width, initial-scale=0.8">
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="static/images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon-16x16.png">
+        <link rel="manifest" href="static/images/site.webmanifest">
+        
+        <title>Drawing Board</title>
+        
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+    </head>
+
+    <body onload="init()">
+        <div id="wrapper">
+            <canvas id="can" width="400" height="400">Below you can write:</canvas>
+            <div>
+                <div>
+                    <a href="#" target="_blank">
+                        <img src="static/images/github.png" height="28px">
+                    </a>
+                </div>
+                <div>
+                    <div id="currentColor"></div>
+                </div>
+                <div>
+                    <button id="clearButton">clear</button>
+                    <button id="saveButton">save</button>
+                </div>
+            </div>
+        </div>
+        <div id="toggleCanvas" class="show">
+            <span id="showCanvas" title="Show canvas">🖌</span>
+            <span id="hideCanvas" title="Show images">🖼</span>
+        </div>
+        <div id="gallery">
+        </div>
+
+        <script async src="static/script.js"></script>
+    </body>
+</html>

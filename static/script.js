@@ -135,7 +135,11 @@ let saveButton = document.querySelector('#saveButton')
 
 function toggleCanvas (e) {
     e.currentTarget.classList.toggle('show');
-    document.querySelector('#gallery').classList.toggle('show');
+    if (e.currentTarget.classList.contains('show')) {
+        document.querySelector('#wrapper').scrollIntoView()
+    } else {
+        document.querySelector('#gallery').scrollIntoView()
+    }
     return false;
 }
 

@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin , AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user
+from getpass import getpass
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -57,7 +58,9 @@ def logout():
 if __name__ == '__main__':
     db.create_all()
     if User.query.count() < 1:
-        admin = User(name='admin', password='1234') # @TODO: hash password
+        uname = input('Enter admin name: ')
+        upassword = getpass('Enter admin password: ')
+        admin = User(name=uname, password=upassword) # @TODO: hash password
         db.session.add(admin)
         db.session.commit()
     app.run(debug=True)

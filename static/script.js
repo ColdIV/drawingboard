@@ -75,6 +75,18 @@ function init() {
     canvas.addEventListener("mouseout", function (e) {
         findxy('out', e)
     }, false)
+    canvas.addEventListener("touchmove", function (e) {
+        findxy('move', e)
+    }, false)
+    canvas.addEventListener("touchstart", function (e) {
+        findxy('down', e)
+    }, false)
+    canvas.addEventListener("touchend", function (e) {
+        findxy('up', e)
+    }, false)
+    canvas.addEventListener("touchcancel", function (e) {
+        findxy('out', e)
+    }, false)
 }
  
 function draw() {
@@ -87,11 +99,14 @@ function draw() {
 }
 
 function findxy(res, e) {
+    e.preventDefault();
     if (res == 'down') {
         prevX = currX
         prevY = currY
-        currX = e.clientX - canvas.getBoundingClientRect().left
-        currY = e.clientY - canvas.getBoundingClientRect().top
+        newX = e.clientX || e.touches[0].clientX
+        newY = e.clientY || e.touches[0].clientY
+        currX = newX - canvas.getBoundingClientRect().left
+        currY = newY - canvas.getBoundingClientRect().top
 
         flag = true
         dot_flag = true
@@ -115,8 +130,10 @@ function findxy(res, e) {
         if (flag) {
             prevX = currX
             prevY = currY
-            currX = e.clientX - canvas.getBoundingClientRect().left
-            currY = e.clientY - canvas.getBoundingClientRect().top
+            newX = e.clientX || e.touches[0].clientX
+            newY = e.clientY || e.touches[0].clientY
+            currX = newX - canvas.getBoundingClientRect().left
+            currY = newY - canvas.getBoundingClientRect().top
             draw()
         }
     }

@@ -208,8 +208,34 @@ function saveCanvas () {
     });
 }
 
+function closeLightbox(el) {
+    if (el) console.log(el.currentTarget);
+    document.querySelector('body').classList.remove('show-lightbox')
+    document.querySelector('#lightbox').classList.remove('verified')
+    document.querySelector('#lightbox .image-wrapper').innerHTML = ""
+}
+
+function openLightbox(image) {
+    closeLightbox()
+    image = image.currentTarget
+    document.querySelector('body').classList.add('show-lightbox')
+    verified = image.dataset.verified
+    if (verified == 'True') {
+        document.querySelector('#lightbox').classList.add('verified')
+    }
+    img = document.createElement('img')
+    img.src = image.src
+    document.querySelector('#lightbox .image-wrapper').appendChild(img)
+}
+
 ['click', 'touch'].forEach(function(e) {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
+    
+    document.querySelector('#lightbox').addEventListener(e, closeLightbox)
+    document.querySelector('#lightbox .lightbox-wrapper').addEventListener(e, function(event){event.stopPropagation()}, false);
+    document.querySelectorAll('#gallery img').forEach((el) => {
+        el.addEventListener(e, openLightbox)
+    })
 })

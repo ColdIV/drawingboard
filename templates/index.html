@@ -31,8 +31,20 @@
         </div>
         <div id="gallery">
             {% for image in images %}
-                <img src="{{path}}/{{image.name}}">
+                {% if not image.flag or image.verified %}
+                    <img data-verified="{{image.verified == True}}" src="{{path}}/{{image.name}}">
+                {% endif %}
             {% endfor %}
+        </div>
+
+        <div id="lightbox">
+            <div class="lightbox-wrapper">    
+                <div class="image-wrapper"></div>
+                <div class="info-wrapper">
+                    <button id="flagButton">report</button>
+                    <span id="verified">verified</span>
+                </div>
+            </div>
         </div>
 
         <script async src="static/script.js"></script>

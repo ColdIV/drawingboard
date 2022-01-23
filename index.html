@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <meta name="viewport" content="width=device-width, initial-scale=0.8">
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="static/images/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon-16x16.png">
+        <link rel="manifest" href="static/images/site.webmanifest">
+        
+        <title>Drawing Board</title>
+        
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+    </head>
+
+    <body onload="init()">
+        <div id="wrapper">
+            <canvas id="can" width="400" height="400">Below you can write:</canvas>
+            <div class="info">
+                <div>
+                    <a href="https://github.com/ColdIV/drawingboard" target="_blank">
+                        <img src="static/images/github.png" height="28px">
+                    </a>
+                </div>
+                <div>
+                    <div id="currentColor"></div>
+                </div>
+                <div>
+                    <button id="clearButton">clear</button>
+                    <button id="saveButton" data-url="/save">save</button>
+                </div>
+            </div>
+        </div>
+        <div id="toggleCanvas" class="show">
+            <span id="showCanvas" title="Show canvas">🖌</span>
+            <span id="hideCanvas" title="Show images">🖼</span>
+        </div>
+        <div id="gallery">
+            <img data-verified="True" src="example/art/1.png">
+            <img data-verified="True" src="example/art/2.png">
+            <img data-verified="True" src="example/art/3.png">
+            <img data-verified="True" src="example/art/4.png">
+        </div>
+
+        <div id="lightbox">
+            <div class="lightbox-wrapper">    
+                <div class="image-wrapper"></div>
+                <div class="info-wrapper">
+                    <button id="flagButton" data-url="/report">report</button>
+                    <span id="verified">verified</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="alerts">
+            <ul>
+            </ul>
+        </div>
+
+        <script async src="example/script.js"></script>
+    </body>
+</html>

@@ -8,7 +8,8 @@ import hashlib
 import os
 import time
 import random
-
+import sys
+from waitress import serve
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -115,4 +116,7 @@ if __name__ == '__main__':
         admin = User(name=uname, password=upassword)
         db.session.add(admin)
         db.session.commit()
-    app.run(debug=True)
+    if len(sys.argv) >= 2 and sys.argv[1] == 'dev':
+        app.run(debug=True)
+    else:
+        serve(app, host='0.0.0.0', port=8282)

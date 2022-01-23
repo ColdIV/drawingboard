@@ -129,9 +129,10 @@ function findxy(res, e) {
 }
 
 // CONTROLS:
-let toggleButton = document.querySelector('#toggleCanvas');
+let toggleButton = document.querySelector('#toggleCanvas')
 let clearButton = document.querySelector('#clearButton')
 let saveButton = document.querySelector('#saveButton')
+let reportButton = document.querySelector('#flagButton')
 
 function toggleCanvas (e) {
     e.currentTarget.classList.toggle('show');
@@ -153,7 +154,7 @@ function showAlert(text, prefix = '') {
         ealert.appendChild(span)
     }
     ealert.innerHTML += text
-    alerts.prepend(ealert)
+    alerts.appendChild(ealert)
     setTimeout(() => {
         ealert.classList.add('fadeout')
         setTimeout(() => {
@@ -212,7 +213,7 @@ function closeLightbox(el) {
     if (el) console.log(el.currentTarget);
     document.querySelector('body').classList.remove('show-lightbox')
     document.querySelector('#lightbox').classList.remove('verified')
-    document.querySelector('#lightbox .image-wrapper').innerHTML = ""
+    document.querySelector('#lightbox .image-wrapper').innerHTML = ''
 }
 
 function openLightbox(image) {
@@ -228,6 +229,35 @@ function openLightbox(image) {
     document.querySelector('#lightbox .image-wrapper').appendChild(img)
 }
 
+function report () {
+    let image = document.querySelector('#lightbox img').src
+    let filename = image.split('/').pop()
+    const formData = new FormData();
+    formData.append('image', filename);
+
+    let url = reportButton.dataset.url
+        fetch(url, {
+            method:"POST",
+            body:formData
+        }).then(response => {
+            if (response.ok) return response;
+            else throw Error(`Server returned ${response.status}: ${response.statusText}`)
+        }).then(response => {
+            // success
+            showAlert('image removed for review', 'success')
+            document.querySelectorAll('#gallery img').forEach((e) => {
+                if (image == e.src) {
+                    e.remove()
+                }
+            })
+            closeLightbox()
+        }).catch(err => {
+            // error
+            showAlert('failed to report image', 'error');
+            closeLightbox()
+        });
+}
+
 ['click', 'touch'].forEach(function(e) {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
@@ -238,4 +268,6 @@ function openLightbox(image) {
     document.querySelectorAll('#gallery img').forEach((el) => {
         el.addEventListener(e, openLightbox)
     })
+
+    reportButton.addEventListener(e, report)
 })

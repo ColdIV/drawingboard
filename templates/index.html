@@ -16,13 +16,6 @@
                     <button id="clearButton">clear</button>
                     <button id="saveButton" data-url="/save">save</button>
                 </div>
-                <div class="alerts">
-                    <ul>
-                        {% for alert in  alerts: %}
-                            <li><span class="{{alert[0]}}">{{alert[0]}}</span>{{alert[1]}}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
         </div>
         <div id="toggleCanvas" class="show">
@@ -41,10 +34,18 @@
             <div class="lightbox-wrapper">    
                 <div class="image-wrapper"></div>
                 <div class="info-wrapper">
-                    <button id="flagButton">report</button>
+                    <button id="flagButton" data-url="/report">report</button>
                     <span id="verified">verified</span>
                 </div>
             </div>
+        </div>
+
+        <div class="alerts">
+            <ul>
+                {% for alert in  alerts: %}
+                    <li><span class="{{alert[0]}}">{{alert[0]}}</span>{{alert[1]}}</li>
+                {% endfor %}
+            </ul>
         </div>
 
         <script async src="static/script.js"></script>

@@ -101,6 +101,13 @@ def save():
     db.session.commit()
     return "OK"
 
+@app.route('/report', methods=['POST'])
+def report():
+    name = request.form['image']
+    num_rows_updated = Art.query.filter_by(name = name).update(dict(flag=True))
+    db.session.commit()
+    return "OK"
+
 if __name__ == '__main__':
     db.create_all()
     if User.query.count() < 1:

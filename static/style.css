@@ -198,15 +198,23 @@ canvas {
 }
 
 .alerts {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    bottom: 16px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    user-select: none;
+    pointer-events: none;
+    z-index: 9999;
 }
 
 .alerts ul {
     list-style: none;
     padding: 0;
     width: 100%;
+    max-width: 400px;
+    user-select: none;
+    pointer-events: none;
 }
 
 .alerts ul li {
@@ -223,6 +231,8 @@ canvas {
     letter-spacing: 1px;
     margin: 0;
     margin-bottom: 4px;
+    user-select: none;
+    pointer-events: none;
 
     animation: fadein .5s;
 }

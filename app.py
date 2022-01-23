@@ -64,7 +64,6 @@ class MyAdminIndexView(AdminIndexView):
         return self.render('admin/index.html')
 
     def render(self, template, **kwargs):
-        print (kwargs)
         images = Art.query.filter_by(flag = True, verified = False).all()
         kwargs['images'] = images
         return super(AdminIndexView, self).render('admin/index.html', **kwargs)

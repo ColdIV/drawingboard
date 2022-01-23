@@ -35,6 +35,12 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(20))
 
+class Art(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    flag = db.Column(db.Boolean, default=False)
+    verified = db.Column(db.Boolean, default=False)
+
 class MyModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -48,6 +54,7 @@ class MyAdminIndexView(AdminIndexView):
 
 admin = Admin(app, index_view=MyAdminIndexView())
 admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
@@ -84,8 +91,11 @@ def logout():
 @app.route('/save', methods=['POST'])
 def save():
     file = request.files['file']
-    filename = str(time.time()).replace(".", ''.join(chr(random.randrange(65,90)) for i in range(4)))
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + '.png'))
+    filename = str(time.time()).replace(".", ''.join(chr(random.randrange(65,90)) for i in range(4))) + '.png'
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    img = Art(name=filename, flag=False, verified=False)
+    db.session.add(img)
+    db.session.commit()
     # @TODO: Save in db as well for flag / verify
     return "OK"
 

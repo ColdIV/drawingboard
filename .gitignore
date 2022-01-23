@@ -2,3 +2,4 @@ db/*
 !db/.gitkeep
 static/art/*
 !static/art/.gitkeep
+env/*

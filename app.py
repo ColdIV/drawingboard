@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin import Admin , AdminIndexView
+from flask_admin import Admin , AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from getpass import getpass
@@ -52,8 +52,28 @@ class MyModelView(ModelView):
         return redirect(url_for('login'))
 
 class MyAdminIndexView(AdminIndexView):
+    @expose('/', methods=('GET', 'POST'))
+    def index_view(self):
+        deleteFile = request.form.get('delete')
+        if deleteFile:
+            image = Art.query.filter_by(flag = True, verified = False, name = deleteFile).first()
+            db.session.delete(image)
+            db.session.commit()
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], deleteFile))
+
+        return self.render('admin/index.html')
+
+    def render(self, template, **kwargs):
+        print (kwargs)
+        images = Art.query.filter_by(flag = True, verified = False).all()
+        kwargs['images'] = images
+        return super(AdminIndexView, self).render('admin/index.html', **kwargs)
+
     def is_accessible(self):
         return current_user.is_authenticated
+    
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login'))
 
 admin = Admin(app, index_view=MyAdminIndexView())
 admin.add_view(MyModelView(User, db.session))

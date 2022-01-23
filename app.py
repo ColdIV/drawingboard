@@ -123,4 +123,4 @@ if __name__ == '__main__':
     if len(sys.argv) >= 2 and sys.argv[1] == 'dev':
         app.run(debug=True)
     else:
-        serve(app, host='0.0.0.0', port=8282)
+        serve(app, host='0.0.0.0', port=config['app']['port'])

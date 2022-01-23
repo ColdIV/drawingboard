@@ -10,11 +10,15 @@ import time
 import random
 import sys
 from waitress import serve
+import configparser
+
+config = configparser.RawConfigParser()
+config.read('.config')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
-app.config['SECRET_KEY'] = 'mysecret'
+app.config['SECRET_KEY'] = config['app']['secret']
 app.config['UPLOAD_FOLDER'] = 'static/art'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 

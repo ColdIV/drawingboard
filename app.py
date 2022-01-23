@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin , AdminIndexView
@@ -6,7 +5,6 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from getpass import getpass
 import hashlib
-import json
 import os
 import time
 import random

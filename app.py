@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
 app.config['SECRET_KEY'] = 'mysecret'
 app.config['UPLOAD_FOLDER'] = 'static/art'
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 
 db = SQLAlchemy(app)
 login = LoginManager(app)

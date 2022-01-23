@@ -143,15 +143,21 @@ function toggleCanvas (e) {
     return false;
 }
 
-function alert(text) {
+function showAlert(text, prefix = '') {
     let alerts = document.querySelector('.alerts ul')
-    let alert = document.createElement('li')
-    alert.innerHTML = text
-    alerts.prepend(alert)
+    let ealert = document.createElement('li')
+    if (prefix != '') {
+        let span = document.createElement('span')
+        ealert.classList.add(prefix)
+        span.innerHTML = prefix
+        ealert.appendChild(span)
+    }
+    ealert.innerHTML += text
+    alerts.prepend(ealert)
     setTimeout(() => {
-        alert.classList.add('fadeout')
+        ealert.classList.add('fadeout')
         setTimeout(() => {
-            alerts.removeChild(alert)
+            alerts.removeChild(ealert)
         }, 500)
     }, 2000)
 }
@@ -159,10 +165,51 @@ function alert(text) {
 
 function clearCanvas () {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    alert('canvas cleared')
+    showAlert('canvas cleared')
+}
+
+function isCanvasBlank(canvas) {
+    const context = canvas.getContext('2d');
+
+    const pixelBuffer = new Uint32Array(
+        context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+    );
+
+    return !pixelBuffer.some(color => color !== 0);
+}
+
+function saveCanvas () {
+    if (isCanvasBlank(canvas)) {
+        showAlert('canvas is empty', 'error');
+        return
+    }
+
+    canvas.toBlob(function(blob) {
+        const formData = new FormData();
+        formData.append('file', blob, 'filename');
+        
+        let url = saveButton.dataset.url
+        fetch(url, {
+            method:"POST",
+            body:formData
+        }).then(response => {
+            if (response.ok) return response;
+            else throw Error(`Server returned ${response.status}: ${response.statusText}`)
+        }).then(response => {
+            // success
+            showAlert('image saved', 'success')
+            var image = document.createElement('img')
+            image.src = URL.createObjectURL(blob)
+            document.querySelector('#gallery').appendChild(image)
+        }).catch(err => {
+            // error
+            showAlert('failed to save image', 'error');
+        });
+    });
 }
 
 ['click', 'touch'].forEach(function(e) {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
+    saveButton.addEventListener(e, saveCanvas)
 })

@@ -7,12 +7,17 @@ from flask_login import UserMixin, LoginManager, current_user, login_user, logou
 from getpass import getpass
 import hashlib
 import json
+import os
+import time
+import random
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
 app.config['SECRET_KEY'] = 'mysecret'
+app.config['UPLOAD_FOLDER'] = 'static/art'
+
 
 db = SQLAlchemy(app)
 login = LoginManager(app)
@@ -75,6 +80,14 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/save', methods=['POST'])
+def save():
+    file = request.files['file']
+    filename = str(time.time()).replace(".", ''.join(chr(random.randrange(65,90)) for i in range(4)))
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename + '.png'))
+    # @TODO: Save in db as well for flag / verify
+    return "OK"
 
 if __name__ == '__main__':
     db.create_all()

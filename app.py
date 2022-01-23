@@ -18,7 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
 app.config['SECRET_KEY'] = 'mysecret'
 app.config['UPLOAD_FOLDER'] = 'static/art'
 
-
 db = SQLAlchemy(app)
 login = LoginManager(app)
 
@@ -58,7 +57,9 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    images = Art.query.all()
+    path = app.config['UPLOAD_FOLDER']
+    return render_template('index.html', images=images, path=path)
 
 @app.route('/login', methods=['GET'])
 def loginForm():
@@ -93,10 +94,10 @@ def save():
     file = request.files['file']
     filename = str(time.time()).replace(".", ''.join(chr(random.randrange(65,90)) for i in range(4))) + '.png'
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     img = Art(name=filename, flag=False, verified=False)
     db.session.add(img)
     db.session.commit()
-    # @TODO: Save in db as well for flag / verify
     return "OK"
 
 if __name__ == '__main__':

@@ -30,6 +30,9 @@
             <span id="hideCanvas" title="Show images">🖼</span>
         </div>
         <div id="gallery">
+            {% for image in images %}
+                <img src="{{path}}/{{image.name}}">
+            {% endfor %}
         </div>
 
         <script async src="static/script.js"></script>

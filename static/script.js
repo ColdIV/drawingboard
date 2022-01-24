@@ -58,7 +58,7 @@ var x = 'rgb(' + gcolorarray[0].join(', ') + ')',
     y = 3
     
 function init() {
-    canvas = document.getElementById('can')
+    canvas = document.getElementById('canvas')
     ctx = canvas.getContext("2d")
     w = canvas.width
     h = canvas.height

@@ -158,13 +158,26 @@ toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
 
 function toggleCanvas (e) {
-    e.currentTarget.classList.toggle('show')
-    if (e.currentTarget.classList.contains('show')) {
-        document.querySelector('#wrapper').scrollIntoView()
-    } else {
+    if (toggleButton.classList.contains('show')) {
         document.querySelector('#gallery').scrollIntoView()
+    } else {
+        document.querySelector('#wrapper').scrollIntoView()
     }
     return false
+}
+
+window.onscroll = function() {
+    if (document.querySelector('#wrapper').getBoundingClientRect().bottom > 0){
+        if (!toggleButton.classList.contains('show')) {
+            toggleButton.classList.add('show')
+        }
+    }
+
+    if (document.querySelector('#wrapper').getBoundingClientRect().bottom <= 0){
+        if (toggleButton.classList.contains('show')) {
+            toggleButton.classList.remove('show')
+        }
+    }
 }
 
 function showAlert(text, prefix = '') {
@@ -187,7 +200,8 @@ function showAlert(text, prefix = '') {
 }
 
 
-function clearCanvas () {
+function clearCanvas (e) {
+    e.preventDefault()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     showAlert('canvas cleared')
 }
@@ -236,7 +250,13 @@ function resetCanSave () {
     }
 }
 
-function saveCanvas () {
+function saveCanvas (e) {
+    e.preventDefault()
+    if (isCanvasBlank(canvas)) {
+        showAlert('canvas is empty', 'error')
+        return
+    }
+    
     if (!canSave) {
         showAlert('too many requests', 'error')
         return
@@ -244,10 +264,6 @@ function saveCanvas () {
         canSave = false
     }
 
-    if (isCanvasBlank(canvas)) {
-        showAlert('canvas is empty', 'error')
-        return
-    }
 
     canvas.toBlob(function(blob) {
         const formData = new FormData()

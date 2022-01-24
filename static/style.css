@@ -210,7 +210,7 @@ canvas {
     justify-content: center;
     user-select: none;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 998;
 }
 
 .alerts ul {

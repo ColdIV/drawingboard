@@ -209,7 +209,26 @@ function openLightbox(image) {
     document.querySelector('#lightbox .image-wrapper').appendChild(img)
 }
 
+let canSave = true
+let canSaveTimerRunning = false
+function resetCanSave () {
+    if (!canSaveTimerRunning) {
+        canSaveTimerRunning = true
+        setTimeout(() => {
+            canSave = true
+            canSaveTimerRunning = false
+        }, 5000)
+    }
+}
+
 function saveCanvas () {
+    if (!canSave) {
+        showAlert('too many requests', 'error')
+        return
+    } else {
+        canSave = false
+    }
+
     if (isCanvasBlank(canvas)) {
         showAlert('canvas is empty', 'error')
         return
@@ -238,10 +257,12 @@ function saveCanvas () {
             image.addEventListener('touch', openLightbox)
 
             document.querySelector('body').classList.remove('loading')
+            resetCanSave()
         }).catch(err => {
             // error
             showAlert('failed to save image', 'error')
             document.querySelector('body').classList.remove('loading')
+            resetCanSave()
         })
     })
 }

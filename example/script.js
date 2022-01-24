@@ -146,13 +146,26 @@ let saveButton = document.querySelector('#saveButton')
 let reportButton = document.querySelector('#flagButton')
 
 function toggleCanvas (e) {
-    e.currentTarget.classList.toggle('show')
-    if (e.currentTarget.classList.contains('show')) {
-        document.querySelector('#wrapper').scrollIntoView()
-    } else {
+    if (toggleButton.classList.contains('show')) {
         document.querySelector('#gallery').scrollIntoView()
+    } else {
+        document.querySelector('#wrapper').scrollIntoView()
     }
     return false
+}
+
+window.onscroll = function() {
+    if (document.querySelector('#wrapper').getBoundingClientRect().bottom > 0){
+        if (!toggleButton.classList.contains('show')) {
+            toggleButton.classList.add('show')
+        }
+    }
+
+    if (document.querySelector('#wrapper').getBoundingClientRect().bottom <= 0){
+        if (toggleButton.classList.contains('show')) {
+            toggleButton.classList.remove('show')
+        }
+    }
 }
 
 function showAlert(text, prefix = '') {

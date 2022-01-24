@@ -205,6 +205,7 @@ function isCanvasBlank(canvas) {
 function closeLightbox(el) {
     document.querySelector('body').classList.remove('show-lightbox')
     document.querySelector('#lightbox').classList.remove('verified')
+    document.querySelector('#lightbox').classList.remove('no-report')
     document.querySelector('#lightbox .image-wrapper').innerHTML = ''
 }
 
@@ -215,6 +216,8 @@ function openLightbox(image) {
     verified = image.dataset.verified
     if (verified == 'True') {
         document.querySelector('#lightbox').classList.add('verified')
+    } else if (verified == undefined) {
+        document.querySelector('#lightbox').classList.add('no-report')
     }
     img = document.createElement('img')
     img.src = image.src

@@ -351,6 +351,10 @@ body.show-lightbox #lightbox {
     display: none;
 }
 
+#lightbox.no-report #flagButton {
+    display: none;
+}
+
 #lightbox.verified #verified {
     display: block;
 }

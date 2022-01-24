@@ -35,7 +35,7 @@ for (ghue = 0; ghue <= 360; ghue += ghue_steps) {
 gcolorarray.push([0,0,0])
 gcolorarray.push([255,255,255])
 
-function circleColor(color, increase = true) {
+function circleColor(increase = true) {
     if (increase == false) {
         if (1+gcolor_index >= gcolorarray.length) return gcolorarray[0]
         return gcolorarray[1+gcolor_index]
@@ -112,10 +112,9 @@ function findxy(res, e) {
         dot_flag = true
         if (dot_flag) {
             ctx.beginPath()
-            let color = ctx.getImageData(currX, currY, 1, 1).data
-            let tmp = circleColor(color)
+            let tmp = circleColor()
             let tmpColor = 'rgb(' + tmp.join(', ') + ')'
-            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(tmp, false).join(', ') + ')'
+            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
             ctx.fillStyle = tmpColor
             ctx.strokeStyle = tmpColor
             ctx.fillRect(currX, currY, 2, 2)
@@ -139,11 +138,24 @@ function findxy(res, e) {
     }
 }
 
+function changeColor (e) {
+    e.preventDefault()
+    blockToggleColor = true
+    let tmp = circleColor()
+    let tmpColor = 'rgb(' + tmp.join(', ') + ')'
+    elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    ctx.fillStyle = tmpColor
+    ctx.strokeStyle = tmpColor
+}
+
 // controls:
 let toggleButton = document.querySelector('#toggleCanvas')
 let clearButton = document.querySelector('#clearButton')
 let saveButton = document.querySelector('#saveButton')
 let reportButton = document.querySelector('#flagButton')
+let toggleColor = document.querySelector('#currentColor')
+toggleColor.addEventListener('touchend', changeColor)
+toggleColor.addEventListener('click', changeColor)
 
 function toggleCanvas (e) {
     e.currentTarget.classList.toggle('show')

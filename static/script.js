@@ -282,7 +282,7 @@ function saveCanvas (e) {
             showAlert('image saved', 'success')
             var image = document.createElement('img')
             image.src = URL.createObjectURL(blob)
-            document.querySelector('#gallery').appendChild(image)
+            document.querySelector('#gallery').prepend(image)
 
             image.addEventListener('click', openLightbox)
             image.addEventListener('touch', openLightbox)

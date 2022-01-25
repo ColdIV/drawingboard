@@ -316,10 +316,19 @@ body.show-lightbox #lightbox {
 
 #lightbox .info-wrapper {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#lightbox #closeButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 8px;
+    cursor: pointer;
 }
 
 #lightbox #flagButton {
-    float: right;
     background-color: rgb(146, 11, 11);
 }
 
@@ -334,7 +343,6 @@ body.show-lightbox #lightbox {
 }
 
 #lightbox #verified {
-    float: right;
     display: none;
     padding: 8px 16px;
     background-color: rgb(9, 129, 5);

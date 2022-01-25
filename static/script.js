@@ -153,6 +153,7 @@ let toggleButton = document.querySelector('#toggleCanvas')
 let clearButton = document.querySelector('#clearButton')
 let saveButton = document.querySelector('#saveButton')
 let reportButton = document.querySelector('#flagButton')
+let closeButton = document.querySelector('#closeButton')
 let toggleColor = document.querySelector('#currentColor')
 toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
@@ -335,6 +336,7 @@ function report () {
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
     
+    closeButton.addEventListener(e, closeLightbox)
     document.querySelector('#lightbox').addEventListener(e, closeLightbox)
     document.querySelector('#lightbox .lightbox-wrapper').addEventListener(e, function(event){event.stopPropagation()}, false)
     document.querySelectorAll('#gallery img').forEach((el) => {

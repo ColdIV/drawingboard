@@ -37,10 +37,10 @@ gcolorarray.push([255,255,255])
 
 function circleColor(increase = true) {
     if (increase == false) {
-        if (1+gcolor_index >= gcolorarray.length) return gcolorarray[0]
+        if (1+gcolor_index >= gcolorarray.length) return gcolorarray[1]
         return gcolorarray[1+gcolor_index]
     }
-    if (++gcolor_index >= gcolorarray.length) gcolor_index = 0
+    if (++gcolor_index >= gcolorarray.length) gcolor_index = 1
         return gcolorarray[gcolor_index]
 }
 

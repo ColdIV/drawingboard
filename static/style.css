@@ -106,29 +106,46 @@ label input[type="checkbox"] + span:before {
     top: 0;
     width: 36px;
     height: 100%;
-    padding: 2px;
     background-color: #111;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    border-left: 2px solid #222;
+
+    transition: background-color .25s, color .25s;
 }
 
-label input[type="checkbox"] + span:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 36px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-label input[type="checkbox"]:checked + span:after {
+label input[type="checkbox"]:checked + span:before {
     content: '✖';
+}
+
+label input[type="checkbox"]:hover + span:before {
+    background-color: #000;
+    color: #bbb;
+    
+    transition: background-color .25s, color .25s;
+}
+
+label:hover {
+    background-color: #111;
+    color: #bbb;
+    
+    transition: background-color .25s, color .25s;
+}
+
+label:active {
+    background-color: #252525;
+    color: #ddd;
+
+    transition: background-color .25s, color .25s;
+}
+
+label:active input[type="checkbox"] + span:before,
+label:focus input[type="checkbox"] + span:before {
+    background-color: #151515;
+    color: #ddd;
+
+    transition: background-color .25s, color .25s;
 }
 
 button {

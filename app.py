@@ -80,7 +80,7 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    images = Art.query.all()
+    images = Art.query.order_by(Art.name.desc()).all()
     path = app.config['UPLOAD_FOLDER']
     return render_template('index.html', images=images, path=path)
 

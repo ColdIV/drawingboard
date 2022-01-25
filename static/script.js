@@ -154,6 +154,9 @@ let clearButton = document.querySelector('#clearButton')
 let saveButton = document.querySelector('#saveButton')
 let reportButton = document.querySelector('#flagButton')
 let closeButton = document.querySelector('#closeButton')
+let expandButton = document.querySelector('#expandButton')
+let additionalControls = document.querySelector('#additionalControls')
+let undoButton = document.querySelector('#undoButton')
 let toggleColor = document.querySelector('#currentColor')
 toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
@@ -178,6 +181,15 @@ window.onscroll = function() {
         if (toggleButton.classList.contains('show')) {
             toggleButton.classList.remove('show')
         }
+    }
+}
+
+function expandAdditionalControls () {
+    additionalControls.classList.toggle('show')
+    if (additionalControls.classList.contains('show')) {
+        expandButton.innerHTML = expandButton.dataset.hide
+    } else {
+        expandButton.innerHTML = expandButton.dataset.show
     }
 }
 
@@ -299,6 +311,10 @@ function saveCanvas (e) {
     })
 }
 
+function undo () {
+    console.log('undoButton click')
+}
+
 function report () {
     let image = document.querySelector('#lightbox img').src
     let filename = image.split('/').pop()
@@ -335,6 +351,8 @@ function report () {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
+    undoButton.addEventListener(e, undo)
+    expandButton.addEventListener(e, expandAdditionalControls)
     
     closeButton.addEventListener(e, closeLightbox)
     document.querySelector('#lightbox').addEventListener(e, closeLightbox)
@@ -345,3 +363,6 @@ function report () {
 
     reportButton.addEventListener(e, report)
 })
+
+// prevent flashing on load, so start with display: none
+additionalControls.style.display = 'flex';

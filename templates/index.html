@@ -4,17 +4,29 @@
         <div id="wrapper">
             <canvas id="canvas" width="400" height="400"></canvas>
             <div class="info">
-                <div>
-                    <a href="https://github.com/ColdIV/drawingboard" target="_blank">
-                        <img src="static/images/github.png" height="28px">
-                    </a>
+                <div>    
+                    <div>
+                        <a href="https://github.com/ColdIV/drawingboard" target="_blank">
+                            <img src="static/images/github.png" height="28px">
+                        </a>
+                    </div>
+                    <div>
+                        <div id="currentColor"></div>
+                    </div>
+                    <div>
+                        <button id="expandButton" data-show='+' data-hide='-'>+</button>
+                        <button id="clearButton">clear</button>
+                        <button id="saveButton" data-url="/save">save</button>
+                    </div>
                 </div>
-                <div>
-                    <div id="currentColor"></div>
-                </div>
-                <div>
-                    <button id="clearButton">clear</button>
-                    <button id="saveButton" data-url="/save">save</button>
+                <div id="additionalControls" style="display: none">
+                    <div>
+                        <label for="eraser">
+                            <input type="checkbox" id="eraser">
+                            <span>eraser</span>
+                        </label>
+                    </div>
+                    <button id="undoButton">undo</button>
                 </div>
             </div>
         </div>

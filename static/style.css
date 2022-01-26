@@ -197,6 +197,10 @@ label:focus input[type="checkbox"] + span:before,
     transition: background-color .25s, color .25s;
 }
 
+#wrapper .info #additionalControls.show #undoButton {
+    user-select: none;
+}
+
 button {
     padding: 8px 16px;
     background-color: #111;

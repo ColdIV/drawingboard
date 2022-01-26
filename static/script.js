@@ -30,8 +30,8 @@ var gvalue_steps = .2
 var gvalue_start = .2
 var gcolorarray = []
 var gcolor_index = Math.round(Math.random() * 7)
-var gcolor_palette = 2
-var gcolor_max_palettes = 4
+var gcolor_palette = 4
+var gcolor_max_palettes = 5
 var eraser = false
 var brushSize = document.querySelector('#medium').dataset.size || 2
 
@@ -59,10 +59,10 @@ gcolor_max_palettes = gcolorarray.length - 1
 
 function circleColor(increase = true) {
     if (increase == false) {
-        if (1+gcolor_index >= gcolorarray[gcolor_palette].length) return gcolorarray[gcolor_palette][0]
+        if (1+gcolor_index >= gcolorarray[gcolor_palette].length) return gcolorarray[gcolor_palette][1]
         return gcolorarray[gcolor_palette][1+gcolor_index]
     }
-    if (++gcolor_index >= gcolorarray[gcolor_palette].length) gcolor_index = 0
+    if (++gcolor_index >= gcolorarray[gcolor_palette].length) gcolor_index = 1
         return gcolorarray[gcolor_palette][gcolor_index]
 }
 

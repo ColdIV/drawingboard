@@ -21,29 +21,49 @@ function hsv2rgb(hue, saturation, value) {
     let m = value - chroma
     let [r,g,b] = [r1+m, g1+m, b1+m]
 
-    return [255*r,255*g,255*b]
+    return [parseInt(255*r),parseInt(255*g),parseInt(255*b)]
 }
 
 var ghue = 0
 var ghue_steps = 20
+var gvalue_steps = .2
+var gvalue_start = .2
 var gcolorarray = []
-var gcolor_index = 0
+var gcolor_index = Math.round(Math.random() * 7)
+var gcolor_palette = 2
+var gcolor_max_palettes = 4
 var eraser = false
 var brushSize = document.querySelector('#medium').dataset.size || 2
 
+let i = 0
+// shades of gray
+gcolorarray[i] = []
+let value = 0;
 for (ghue = 0; ghue <= 360; ghue += ghue_steps) {
-    gcolorarray.push(hsv2rgb(ghue, .80, 1))
+    gcolorarray[i].push(hsv2rgb(360, 0, value))
+    value += (100 / (360 / ghue_steps)) / 100
 }
-gcolorarray.push([0,0,0])
-gcolorarray.push([255,255,255])
+++i
+
+// colored
+for (let gvalue = gvalue_start; gvalue <= 1; gvalue += gvalue_steps) {
+    gcolorarray[i++] = []
+    for (ghue = 0; ghue <= 360; ghue += ghue_steps) {
+        gcolorarray[i - 1].push(hsv2rgb(ghue, 1, gvalue))
+    }
+}
+
+gcolor_max_palettes = gcolorarray.length - 1
+
+
 
 function circleColor(increase = true) {
     if (increase == false) {
-        if (1+gcolor_index >= gcolorarray.length) return gcolorarray[1]
-        return gcolorarray[1+gcolor_index]
+        if (1+gcolor_index >= gcolorarray[gcolor_palette].length) return gcolorarray[gcolor_palette][0]
+        return gcolorarray[gcolor_palette][1+gcolor_index]
     }
-    if (++gcolor_index >= gcolorarray.length) gcolor_index = 1
-        return gcolorarray[gcolor_index]
+    if (++gcolor_index >= gcolorarray[gcolor_palette].length) gcolor_index = 0
+        return gcolorarray[gcolor_palette][gcolor_index]
 }
 
 // @source: https://stackoverflow.com/a/67723999/10495683 (modified)
@@ -159,8 +179,22 @@ function findxy(res, e) {
 
 function changeColor (e) {
     e.preventDefault()
-    blockToggleColor = true
     let tmp = circleColor()
+    let tmpColor = 'rgb(' + tmp.join(', ') + ')'
+    elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    ctx.fillStyle = tmpColor
+    ctx.strokeStyle = tmpColor
+}
+
+function toggleColorPalette (e) {
+    let index = e.currentTarget.dataset.number
+    index = (index >= 0 && index < gcolor_max_palettes) ? ++index : 0
+
+    gcolor_palette = index
+    e.currentTarget.dataset.number = index
+    e.currentTarget.innerHTML = index + 1 // just for visuals ;)
+
+    let tmp = gcolorarray[gcolor_palette][gcolor_index]
     let tmpColor = 'rgb(' + tmp.join(', ') + ')'
     elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
     ctx.fillStyle = tmpColor
@@ -197,6 +231,7 @@ let sizeSmall = document.querySelector('#small')
 let sizeMedium = document.querySelector('#medium')
 let sizeLarge = document.querySelector('#large')
 let sizeExtraLarge = document.querySelector('#extralarge')
+let toggleColorPaletteButton = document.querySelector('#colorPalette')
 let toggleColor = document.querySelector('#currentColor')
 toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
@@ -426,6 +461,7 @@ function report () {
     sizeLarge.addEventListener(e, toggleBrushSize)
     sizeExtraLarge.addEventListener(e, toggleBrushSize)
     expandButton.addEventListener(e, expandAdditionalControls)
+    toggleColorPaletteButton.addEventListener(e, toggleColorPalette)
     
     closeButton.addEventListener(e, closeLightbox)
     document.querySelector('#lightbox').addEventListener(e, closeLightbox)

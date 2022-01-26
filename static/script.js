@@ -29,7 +29,7 @@ var ghue_steps = 20
 var gcolorarray = []
 var gcolor_index = 0
 var eraser = false
-var brushSize = 2 // 1 - small; 2 - medium; 3 - large
+var brushSize = document.querySelector('#medium').dataset.size || 2
 
 for (ghue = 0; ghue <= 360; ghue += ghue_steps) {
     gcolorarray.push(hsv2rgb(ghue, .80, 1))
@@ -94,8 +94,13 @@ function init() {
 function draw() {
     ctx.beginPath()
     ctx.moveTo(prevX, prevY)
-    ctx.lineTo(currX, currY)
+    if (eraser) {
+        ctx.globalCompositeOperation = "destination-out"
+    } else {
+        ctx.globalCompositeOperation="source-over"
+    }
     ctx.lineWidth = y * brushSize
+    ctx.lineTo(currX, currY)
     ctx.stroke()
     ctx.closePath()
 }
@@ -112,7 +117,7 @@ function findxy(res, e) {
 
         flag = true
         dot_flag = true
-        if (dot_flag) {
+        if (dot_flag && !eraser) {
             ctx.beginPath()
             let tmp = circleColor()
             let tmpColor = 'rgb(' + tmp.join(', ') + ')'
@@ -323,9 +328,9 @@ function undo () {
 
 function toggleEraser () {
     if (eraserEl.checked) {
-        erase = true
+        eraser = true
     } else {
-        erase = false
+        eraser = false
     }
 }
 

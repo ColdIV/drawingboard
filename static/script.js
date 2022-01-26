@@ -46,7 +46,6 @@ function circleColor(increase = true) {
         return gcolorarray[gcolor_index]
 }
 
-
 // @source: https://stackoverflow.com/a/67723999/10495683 (modified)
 let elementCurrentColor = document.querySelector('#currentColor');
 var canvas, ctx, flag = false,
@@ -64,6 +63,11 @@ function init() {
     ctx = canvas.getContext("2d")
     w = canvas.width
     h = canvas.height
+
+    let tmpColor = ctx.fillStyle
+    ctx.fillStyle = '#111'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = tmpColor
 
     canvas.addEventListener("mousemove", function (e) {
         findxy('move', e)
@@ -94,15 +98,21 @@ function init() {
 function draw() {
     ctx.beginPath()
     ctx.moveTo(prevX, prevY)
+    let tmpColor = ctx.fillStyle
     if (eraser) {
-        ctx.globalCompositeOperation = "destination-out"
-    } else {
-        ctx.globalCompositeOperation="source-over"
+        // @TODO replace with proper erase when the undo is implemented properly
+        ctx.fillStyle = '#111'
+        ctx.strokeStyle = '#111'
     }
     ctx.lineWidth = y * brushSize
     ctx.lineTo(currX, currY)
     ctx.stroke()
     ctx.closePath()
+    cPush()
+    if (eraser) {
+        ctx.fillStyle = tmpColor
+        ctx.strokeStyle = tmpColor
+    }
 }
 
 function findxy(res, e) {
@@ -154,6 +164,22 @@ function changeColor (e) {
     ctx.fillStyle = tmpColor
     ctx.strokeStyle = tmpColor
 }
+
+// undo script
+// @source: https://www.codicode.com/art/undo_and_redo_to_the_html5_canvas.aspx
+// note: this is not an optimal approach. as @Max said in the comments of this article:
+// "But saving the whole canvas as ana image for undo or redo, is memory intensive, and a performance killer."
+// A better aproach would be this: https://stackoverflow.com/questions/17150610/undo-redo-for-paint-program-using-canvas
+// @TODO future me, because I am too tired right now
+var cPushArray = new Array();
+var cStep = -1;
+	
+function cPush () {
+    cStep++;
+    if (cStep < cPushArray.length) { cPushArray.length = cStep; }
+    cPushArray.push(canvas.toDataURL());
+}
+
 
 // controls:
 let toggleButton = document.querySelector('#toggleCanvas')
@@ -226,7 +252,10 @@ function showAlert(text, prefix = '') {
 
 function clearCanvas (e) {
     e.preventDefault()
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    let tmpColor = ctx.fillStyle
+    ctx.fillStyle = '#111'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = tmpColor
     showAlert('canvas cleared')
 }
 
@@ -323,7 +352,18 @@ function saveCanvas (e) {
 }
 
 function undo () {
-    console.log('undoButton click')
+    if (cStep > 0) {
+        cStep--
+        var canvasPic = new Image()
+        canvasPic.src = cPushArray[cStep]
+        canvasPic.onload = function () { 
+            let tmpColor = ctx.fillStyle
+            ctx.fillStyle = '#111'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = tmpColor
+            ctx.drawImage(canvasPic, 0, 0)
+        }
+    }
 }
 
 function toggleEraser () {
@@ -377,7 +417,7 @@ function report () {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
-    undoButton.addEventListener(e, undo)
+    // undoButton.addEventListener(e, undo)
     eraserEl.addEventListener(e, toggleEraser)
     sizeSmall.addEventListener(e, toggleBrushSize)
     sizeMedium.addEventListener(e, toggleBrushSize)
@@ -396,3 +436,25 @@ function report () {
 
 // prevent flashing on load, so start with display: none
 additionalControls.style.display = 'flex';
+
+var interval
+
+function destroyInterval (e) {
+    e.preventDefault()
+    clearInterval(interval)
+}
+
+function createInterval (e) {
+    e.preventDefault()
+    interval = setInterval(() => {
+        undo()
+    }, 50)
+}
+
+undoButton.addEventListener('mousedown', createInterval)
+undoButton.addEventListener('touchstart', createInterval)
+
+undoButton.addEventListener('mouseup', destroyInterval)
+undoButton.addEventListener('mouseout', destroyInterval)
+undoButton.addEventListener('touchend', destroyInterval)
+undoButton.addEventListener('touchcancel', destroyInterval)

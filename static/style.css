@@ -89,17 +89,34 @@ label {
     cursor: pointer;
 }
 
-label input[type="checkbox"] {
+.size-select > label {
+    position: relative;
+    cursor: pointer;
+    width: 36px;
+    height: 32px;
+    margin-left: 8px;
+    padding: 0;
+    background-color: transparent;
+}
+
+.size-select > label:first-of-type {
+    margin-left: 0;
+}
+
+label input[type="checkbox"],
+.size-select > label input[type="radio"] {
     position: absolute;
     opacity: 0;
     z-index: -1;
 }
 
-label span {
+label span,
+.size-select > label {
     user-select: none;
 }
 
-label input[type="checkbox"] + span:before {
+label input[type="checkbox"] + span:before,
+.size-select > label input[type="radio"] + span:before {
     content: '';
     position: absolute;
     right: 0;
@@ -115,11 +132,41 @@ label input[type="checkbox"] + span:before {
     transition: background-color .25s, color .25s;
 }
 
-label input[type="checkbox"]:checked + span:before {
-    content: '✖';
+.size-select > label input[type="radio"] + span:after {
+    content: '';
+    position: absolute;
+    background-color: #ccc;
 }
 
-label input[type="checkbox"]:hover + span:before {
+.size-select > label input[type="radio"]#small + span:after {
+    right: 17px;
+    top: 15px;
+    width: 2px;
+    height: 2px;
+}
+
+.size-select > label input[type="radio"]#medium + span:after {
+    right: 15px;
+    top: 13px;
+    width: 6px;
+    height: 6px;
+}
+.size-select > label input[type="radio"]#large + span:after {
+    right: 12px;
+    top: 10px;
+    width: 12px;
+    height: 12px;
+}
+
+label input[type="checkbox"]:checked + span:before {
+content: '✖';
+}
+.size-select > label input[type="radio"]:checked + span:before {
+    border: 2px solid #ccc;
+}
+
+label input[type="checkbox"]:hover + span:before,
+.size-select > label input[type="radio"]:hover + span:before {
     background-color: #000;
     color: #bbb;
     
@@ -141,7 +188,9 @@ label:active {
 }
 
 label:active input[type="checkbox"] + span:before,
-label:focus input[type="checkbox"] + span:before {
+label:focus input[type="checkbox"] + span:before,
+.size-select > label:active input[type="radio"] + span:before,
+.size-select > label:focus input[type="radio"] + span:before {
     background-color: #151515;
     color: #ddd;
 

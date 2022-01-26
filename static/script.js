@@ -106,6 +106,7 @@ function draw() {
     }
     ctx.lineWidth = y * brushSize
     ctx.lineTo(currX, currY)
+    ctx.lineJoin = ctx.lineCap = 'round'
     ctx.stroke()
     ctx.closePath()
     cPush()
@@ -134,7 +135,8 @@ function findxy(res, e) {
             elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
             ctx.fillStyle = tmpColor
             ctx.strokeStyle = tmpColor
-            ctx.fillRect(currX, currY, 2, 2)
+            ctx.arc(currX, currY, (y * brushSize) / 2, 0, 2 * Math.PI, false)
+            ctx.fill();
             ctx.closePath()
             dot_flag = false
         }
@@ -267,7 +269,7 @@ function isCanvasBlank(canvas) {
         context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
     )
 
-    return !pixelBuffer.some(color => color !== 0)
+    return !pixelBuffer.some(color => color !== 0 && color !== 4279308561)
 }
 
 function closeLightbox(el) {
@@ -418,7 +420,6 @@ function report () {
     toggleButton.addEventListener(e, toggleCanvas)
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
-    // undoButton.addEventListener(e, undo)
     eraserEl.addEventListener(e, toggleEraser)
     sizeSmall.addEventListener(e, toggleBrushSize)
     sizeMedium.addEventListener(e, toggleBrushSize)

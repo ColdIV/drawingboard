@@ -136,6 +136,7 @@ label input[type="checkbox"] + span:before,
     content: '';
     position: absolute;
     background-color: #ccc;
+    border-radius: 50%;
 }
 
 .size-select > label input[type="radio"]#small + span:after {

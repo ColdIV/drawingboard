@@ -157,6 +157,12 @@ label input[type="checkbox"] + span:before,
     width: 12px;
     height: 12px;
 }
+.size-select > label input[type="radio"]#extralarge + span:after {
+    right: 10px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+}
 
 label input[type="checkbox"]:checked + span:before {
 content: '✖';

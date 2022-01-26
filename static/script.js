@@ -28,6 +28,8 @@ var ghue = 0
 var ghue_steps = 20
 var gcolorarray = []
 var gcolor_index = 0
+var eraser = false
+var brushSize = 2 // 1 - small; 2 - medium; 3 - large
 
 for (ghue = 0; ghue <= 360; ghue += ghue_steps) {
     gcolorarray.push(hsv2rgb(ghue, .80, 1))
@@ -55,7 +57,7 @@ var canvas, ctx, flag = false,
     dot_flag = false
 
 var x = 'rgb(' + gcolorarray[0].join(', ') + ')',
-    y = 3
+    y = 1.5
     
 function init() {
     canvas = document.getElementById('canvas')
@@ -93,7 +95,7 @@ function draw() {
     ctx.beginPath()
     ctx.moveTo(prevX, prevY)
     ctx.lineTo(currX, currY)
-    ctx.lineWidth = y
+    ctx.lineWidth = y * brushSize
     ctx.stroke()
     ctx.closePath()
 }
@@ -157,6 +159,10 @@ let closeButton = document.querySelector('#closeButton')
 let expandButton = document.querySelector('#expandButton')
 let additionalControls = document.querySelector('#additionalControls')
 let undoButton = document.querySelector('#undoButton')
+let eraserEl = document.querySelector('#eraser')
+let sizeSmall = document.querySelector('#small')
+let sizeMedium = document.querySelector('#medium')
+let sizeLarge = document.querySelector('#large')
 let toggleColor = document.querySelector('#currentColor')
 toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
@@ -315,6 +321,21 @@ function undo () {
     console.log('undoButton click')
 }
 
+function toggleEraser () {
+    if (eraserEl.checked) {
+        erase = true
+    } else {
+        erase = false
+    }
+}
+
+function toggleBrushSize (e) {
+    el = e.currentTarget
+    if (el.checked) {
+        brushSize = el.dataset.size
+    }
+}
+
 function report () {
     let image = document.querySelector('#lightbox img').src
     let filename = image.split('/').pop()
@@ -352,6 +373,10 @@ function report () {
     clearButton.addEventListener(e, clearCanvas)
     saveButton.addEventListener(e, saveCanvas)
     undoButton.addEventListener(e, undo)
+    eraserEl.addEventListener(e, toggleEraser)
+    sizeSmall.addEventListener(e, toggleBrushSize)
+    sizeMedium.addEventListener(e, toggleBrushSize)
+    sizeLarge.addEventListener(e, toggleBrushSize)
     expandButton.addEventListener(e, expandAdditionalControls)
     
     closeButton.addEventListener(e, closeLightbox)

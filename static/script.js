@@ -116,6 +116,8 @@ function init() {
     canvas.addEventListener("touchcancel", function (e) {
         findxy('out', e)
     }, false)
+
+    document.querySelector('.loading').classList.remove('loading')
 }
  
 function draw() {

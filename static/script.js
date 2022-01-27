@@ -77,6 +77,7 @@ var canvas, ctx, flag = false,
     prevY = 0,
     currY = 0,
     dot_flag = false
+var colorLocked = false    
 
 var x = 'rgb(' + gcolorarray[0].join(', ') + ')',
     y = 1.5
@@ -155,11 +156,13 @@ function findxy(res, e) {
         dot_flag = true
         if (dot_flag && !eraser) {
             ctx.beginPath()
-            let tmp = circleColor()
-            let tmpColor = 'rgb(' + tmp.join(', ') + ')'
-            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
-            ctx.fillStyle = tmpColor
-            ctx.strokeStyle = tmpColor
+            if (!colorLocked) {
+                let tmp = circleColor()
+                let tmpColor = 'rgb(' + tmp.join(', ') + ')'
+                elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+                ctx.fillStyle = tmpColor
+                ctx.strokeStyle = tmpColor
+            }
             ctx.arc(currX, currY, (y * brushSize) / 2, 0, 2 * Math.PI, false)
             ctx.fill();
             ctx.closePath()
@@ -187,16 +190,22 @@ function findxy(res, e) {
     }
 }
 
-function changeColor (e) {
-    e.preventDefault()
+function changeColor (e = null, setElement = true) {
+    if (e) {
+        e.preventDefault()
+        e.stopPropagation()
+    }
     let tmp = circleColor()
     let tmpColor = 'rgb(' + tmp.join(', ') + ')'
-    elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    if (setElement) {
+        elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    }
     ctx.fillStyle = tmpColor
     ctx.strokeStyle = tmpColor
 }
 
 function toggleColorPalette (e) {
+    e.stopPropagation()
     let index = e.currentTarget.dataset.number
     index = (index >= 0 && index < gcolor_max_palettes) ? ++index : 0
 
@@ -243,6 +252,7 @@ let sizeLarge = document.querySelector('#large')
 let sizeExtraLarge = document.querySelector('#extralarge')
 let toggleColorPaletteButton = document.querySelector('#colorPalette')
 let toggleColor = document.querySelector('#currentColor')
+let lockColor = document.querySelector('.colorContainer')
 toggleColor.addEventListener('touchend', changeColor)
 toggleColor.addEventListener('click', changeColor)
 
@@ -472,6 +482,16 @@ function report () {
     sizeExtraLarge.addEventListener(e, toggleBrushSize)
     expandButton.addEventListener(e, expandAdditionalControls)
     toggleColorPaletteButton.addEventListener(e, toggleColorPalette)
+    lockColor.addEventListener(e, () => {
+        colorLocked = !colorLocked
+        lockColor.classList.toggle('lock')
+        
+        if (colorLocked) {
+            changeColor(null, false)
+        } else {
+            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+        }
+    })
     
     closeButton.addEventListener(e, closeLightbox)
     document.querySelector('#lightbox').addEventListener(e, closeLightbox)

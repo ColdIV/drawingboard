@@ -306,16 +306,22 @@ canvas {
 }
 
 #currentColor {
-    width: 80px;
+    width: 70px;
     height: 20px;
+    margin-left: 8px;
     background: #333;
     cursor: pointer;
 }
 
 .colorContainer {
     background-color: #333;
-    padding: 0 8px 0 0;
+    padding: 0 30px 0 0;
     height: 100%;
+    cursor: pointer;
+}
+
+.colorContainer.lock {
+    background-color: #111;
 }
 
 .login-form {

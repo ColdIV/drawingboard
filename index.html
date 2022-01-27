@@ -14,20 +14,51 @@
     </head>
 
     <body onload="init()">
-        <div id="wrapper">
+        <div id="wrapper" class="loading">
             <canvas id="canvas" width="400" height="400"></canvas>
             <div class="info">
-                <div>
-                    <a href="https://github.com/ColdIV/drawingboard" target="_blank">
-                        <img src="static/images/github.png" height="28px">
-                    </a>
+                <div>    
+                    <div>
+                        <a href="https://github.com/ColdIV/drawingboard" target="_blank">
+                            <img src="static/images/github.png" height="28px">
+                        </a>
+                    </div>
+                    <div class="colorContainer">
+                        <button id="colorPalette" data-number="4">5</button>
+                        <div id="currentColor"></div>
+                    </div>
+                    <div>
+                        <button id="expandButton" data-show='+' data-hide='-'>+</button>
+                        <button id="clearButton">clear</button>
+                        <button id="saveButton" data-url="/save">save</button>
+                    </div>
                 </div>
-                <div>
-                    <div id="currentColor"></div>
-                </div>
-                <div>
-                    <button id="clearButton">clear</button>
-                    <button id="saveButton" data-url="/save">save</button>
+                <div id="additionalControls" style="display: none">
+                    <div>
+                        <label for="eraser">
+                            <input type="checkbox" id="eraser">
+                            <span>eraser</span>
+                        </label>
+                    </div>
+                    <div class="size-select">
+                        <label for="small">
+                            <input type="radio" name="size" id="small" data-size="1">
+                            <span></span>
+                        </label>
+                        <label for="medium">
+                            <input type="radio" name="size" id="medium" data-size="2" checked>
+                            <span></span>
+                        </label>
+                        <label for="large">
+                            <input type="radio" name="size" id="large" data-size="4">
+                            <span></span>
+                        </label>
+                        <label for="extralarge">
+                            <input type="radio" name="size" id="extralarge" data-size="8">
+                            <span></span>
+                        </label>
+                    </div>
+                    <button id="undoButton">undo</button>
                 </div>
             </div>
         </div>
@@ -36,16 +67,17 @@
             <span id="hideCanvas" title="Show images">🖼</span>
         </div>
         <div id="gallery">
-            <img data-verified="True" src="example/art/1.png">
-            <img data-verified="True" src="example/art/2.png">
-            <img data-verified="True" src="example/art/3.png">
-            <img data-verified="True" src="example/art/4.png">
+            <img loading="lazy" data-verified="False" src="example/art/1.png">
+            <img loading="lazy" data-verified="True" src="example/art/2.png">
+            <img loading="lazy" data-verified="True" src="example/art/3.png">
+            <img loading="lazy" data-verified="True" src="example/art/4.png">
         </div>
 
         <div id="lightbox">
             <div class="lightbox-wrapper">    
                 <div class="image-wrapper"></div>
                 <div class="info-wrapper">
+                    <span id="closeButton">✖</span>
                     <button id="flagButton" data-url="/report">report</button>
                     <span id="verified">verified</span>
                 </div>

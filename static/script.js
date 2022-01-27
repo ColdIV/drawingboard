@@ -67,7 +67,9 @@ function circleColor(increase = true) {
 }
 
 // @source: https://stackoverflow.com/a/67723999/10495683 (modified)
-let elementCurrentColor = document.querySelector('#currentColor');
+let elementCurrentColor = document.querySelector('#currentColor')
+elementCurrentColor.style.backgroundColor = 'rgb(' + gcolorarray[gcolor_palette][gcolor_index].join(', ') + ')'
+
 var canvas, ctx, flag = false,
     prevX = 0,
     currX = 0,

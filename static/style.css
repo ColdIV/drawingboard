@@ -308,7 +308,7 @@ canvas {
 #currentColor {
     width: 80px;
     height: 20px;
-    background: rgb(255, 119, 51);
+    background: #333;
     cursor: pointer;
 }
 

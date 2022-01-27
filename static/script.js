@@ -92,7 +92,7 @@ function init() {
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = tmpColor
 
-    canvas.addEventListener("mousemove", function (e) {
+    document.addEventListener("mousemove", function (e) {
         findxy('move', e)
     }, false)
     canvas.addEventListener("mousedown", function (e) {
@@ -101,7 +101,7 @@ function init() {
     canvas.addEventListener("mouseup", function (e) {
         findxy('up', e)
     }, false)
-    canvas.addEventListener("mouseout", function (e) {
+    document.addEventListener("mouseup", function (e) {
         findxy('out', e)
     }, false)
     canvas.addEventListener("touchmove", function (e) {
@@ -175,6 +175,11 @@ function findxy(res, e) {
             newY = e.clientY || e.touches[0].clientY
             currX = newX - canvas.getBoundingClientRect().left
             currY = newY - canvas.getBoundingClientRect().top
+            if (0 > prevX || 0 > prevY ||
+                w < prevX || h < prevY) {
+                prevX = currX
+                prevY = currY
+            }
             draw()
         }
     }

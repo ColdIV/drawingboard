@@ -24,7 +24,7 @@ a {
 
 #wrapper {
     width: 100%;
-    margin-top: 10%;
+    padding-top: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -561,6 +561,7 @@ body.show-lightbox #lightbox {
     content: '';
     display: block;
     position: absolute;
+    margin-top: 10%;
     top: 168px;
     width: 64px;
     height: 64px;

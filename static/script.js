@@ -119,6 +119,7 @@ function init() {
     }, false)
 
     document.querySelector('.loading').classList.remove('loading')
+    cPush()
 }
  
 function draw() {
@@ -165,6 +166,7 @@ function findxy(res, e) {
             }
             ctx.arc(currX, currY, (y * brushSize) / 2, 0, 2 * Math.PI, false)
             ctx.fill();
+            cPush()
             ctx.closePath()
             dot_flag = false
         }
@@ -314,6 +316,7 @@ function clearCanvas (e) {
     ctx.fillStyle = '#111'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = tmpColor
+    cPush()
     showAlert('canvas cleared')
 }
 

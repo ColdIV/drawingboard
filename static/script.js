@@ -524,10 +524,16 @@ function report () {
 additionalControls.style.display = 'flex';
 
 var intervalTimeout
+var intervalTimeoutType = 'timeout'
 
 function destroyInterval (e) {
     e.preventDefault()
-    clearTimeout(intervalTimeout)
+    if (intervalTimeoutType == 'timeout') {
+        clearTimeout(intervalTimeout)
+    } else {
+        clearInterval(intervalTimeout)
+    }
+    intervalTimeoutType = 'timeout'
 }
 
 function createInterval (e) {
@@ -537,6 +543,7 @@ function createInterval (e) {
     // I do not understand how, but this seems to work.
     // it does, however, break when I remove either of those intervalTimeouts below
     intervalTimeout = setTimeout(() => {
+        intervalTimeoutType = 'interval'
         intervalTimeout = setInterval(() => {
             undo()
         }, 50)

@@ -523,18 +523,24 @@ function report () {
 // prevent flashing on load, so start with display: none
 additionalControls.style.display = 'flex';
 
-var interval
+var intervalTimeout
 
 function destroyInterval (e) {
     e.preventDefault()
-    clearInterval(interval)
+    clearTimeout(intervalTimeout)
 }
 
 function createInterval (e) {
     e.preventDefault()
-    interval = setInterval(() => {
-        undo()
-    }, 50)
+    undo()
+    // please rewrite as part of #7; this can't be right...
+    // I do not understand how, but this seems to work.
+    // it does, however, break when I remove either of those intervalTimeouts below
+    intervalTimeout = setTimeout(() => {
+        intervalTimeout = setInterval(() => {
+            undo()
+        }, 50)
+    }, 100)
 }
 
 undoButton.addEventListener('mousedown', createInterval)

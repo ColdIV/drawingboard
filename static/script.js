@@ -57,10 +57,20 @@ gcolor_max_palettes = gcolorarray.length - 1
 
 
 
-function circleColor(increase = true) {
+function circleColor(increase = true, backwards = false) {
     if (increase == false) {
-        if (1+gcolor_index >= gcolorarray[gcolor_palette].length) return gcolorarray[gcolor_palette][1]
-        return gcolorarray[gcolor_palette][1+gcolor_index]
+        if (backwards) {
+            // decreases index by 1 and returns current color
+            // improve in #7
+            if (gcolor_index - 1 >= 0) return gcolorarray[gcolor_palette][gcolor_index--]
+            else {
+                --gcolor_index
+                return gcolorarray[gcolor_palette][gcolorarray[gcolor_palette].length]
+            }
+        } else {
+            if (1+gcolor_index >= gcolorarray[gcolor_palette].length) return gcolorarray[gcolor_palette][1]
+            return gcolorarray[gcolor_palette][1+gcolor_index]
+        }
     }
     if (++gcolor_index >= gcolorarray[gcolor_palette].length) gcolor_index = 1
         return gcolorarray[gcolor_palette][gcolor_index]
@@ -198,7 +208,11 @@ function changeColor (e = null, setElement = true) {
     let tmp = circleColor()
     let tmpColor = 'rgb(' + tmp.join(', ') + ')'
     if (setElement) {
-        elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+        let elColor = circleColor(false)
+        if (colorLocked) {
+            elColor = tmp
+        }
+        elementCurrentColor.style.backgroundColor = 'rgb(' + elColor.join(', ') + ')'
     }
     ctx.fillStyle = tmpColor
     ctx.strokeStyle = tmpColor
@@ -489,7 +503,7 @@ function report () {
         if (colorLocked) {
             changeColor(null, false)
         } else {
-            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+            elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false, true).join(', ') + ')'
         }
     })
     

@@ -539,9 +539,6 @@ function destroyInterval (e) {
 function createInterval (e) {
     e.preventDefault()
     undo()
-    // please rewrite as part of #7; this can't be right...
-    // I do not understand how, but this seems to work.
-    // it does, however, break when I remove either of those intervalTimeouts below
     intervalTimeout = setTimeout(() => {
         intervalTimeoutType = 'interval'
         intervalTimeout = setInterval(() => {

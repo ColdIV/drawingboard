@@ -231,7 +231,11 @@ function toggleColorPalette (e) {
 
     let tmp = gcolorarray[gcolor_palette][gcolor_index]
     let tmpColor = 'rgb(' + tmp.join(', ') + ')'
-    elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    if (colorLocked) {
+        elementCurrentColor.style.backgroundColor = tmpColor
+    } else {
+        elementCurrentColor.style.backgroundColor = 'rgb(' + circleColor(false).join(', ') + ')'
+    }
     ctx.fillStyle = tmpColor
     ctx.strokeStyle = tmpColor
 }

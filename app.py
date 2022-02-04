@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_, or_
 from flask_admin import Admin , AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
@@ -11,6 +12,7 @@ import random
 import sys
 from waitress import serve
 import configparser
+import json
 
 config = configparser.RawConfigParser()
 config.read('.config')
@@ -80,9 +82,43 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    images = Art.query.order_by(Art.name.desc()).all()
+    limit = 1#100
+    images = Art.query.order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
-    return render_template('index.html', images=images, path=path)
+    return render_template('index.html', images=images, path=path, offset=limit)
+
+@app.route('/load/<offset>')
+def load(offset = 0):
+    # max number of images to load
+    limit = 18
+
+    response = {}
+    response['success'] = True
+    response['errors'] = []
+
+    try:
+        offset = int(offset)
+    except ValueError:
+        response['success'] = False
+        response['errors'].append('Offset is not an integer.')
+        return json.dumps(response)
+
+    response['offset'] = offset + limit
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).offset(offset).limit(limit).all()
+    path = app.config['UPLOAD_FOLDER']
+    
+    response['images'] = []
+    for img in images:
+        response['images'].append({
+            'verified': img.verified,
+            'path': path + '/' + img.name
+        })
+    
+    if len(response['images']) == 0:
+        response['success'] = False
+        response['errors'].append('No images found')
+    
+    return json.dumps(response)
 
 @app.route('/login', methods=['GET'])
 def loginForm():
@@ -103,7 +139,7 @@ def login():
             return redirect(url_for('admin.index'))
     
     alerts = []
-    alerts.append(["error","login is invalid."])
+    alerts.append(['error','login is invalid.'])
     return render_template('login_form.html', alerts=alerts)
 
 @app.route('/logout')
@@ -115,20 +151,20 @@ def logout():
 @app.route('/save', methods=['POST'])
 def save():
     file = request.files['file']
-    filename = str(time.time()).replace(".", ''.join(chr(random.randrange(65,90)) for i in range(4))) + '.png'
+    filename = str(time.time()).replace('.', ''.join(chr(random.randrange(65,90)) for i in range(4))) + '.png'
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     img = Art(name=filename, flag=False, verified=False)
     db.session.add(img)
     db.session.commit()
-    return "OK"
+    return 'OK'
 
 @app.route('/report', methods=['POST'])
 def report():
     name = request.form['image']
     num_rows_updated = Art.query.filter_by(name = name).update(dict(flag=True))
     db.session.commit()
-    return "OK"
+    return 'OK'
 
 if __name__ == '__main__':
     db.create_all()

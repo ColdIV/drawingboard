@@ -53,12 +53,13 @@
             <span id="showCanvas" title="Show canvas">🖌</span>
             <span id="hideCanvas" title="Show images">🖼</span>
         </div>
-        <div id="gallery">
+        <div id="gallery" data-offset="{{offset}}" data-url="/load/">
             {% for image in images %}
                 {% if not image.flag or image.verified %}
                     <img loading="lazy" data-verified="{{image.verified == True}}" src="{{path}}/{{image.name}}">
                 {% endif %}
             {% endfor %}
+            <div id="loader"></div>
         </div>
 
         <div id="lightbox">
@@ -81,5 +82,6 @@
         </div>
 
         <script async src="static/script.js"></script>
+        <script async src="static/imageLoader.js"></script>
     </body>
 {% endblock %}

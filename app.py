@@ -82,7 +82,7 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    limit = 1#100
+    limit = 100
     images = Art.query.order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
     return render_template('index.html', images=images, path=path, offset=limit)

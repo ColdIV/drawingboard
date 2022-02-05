@@ -1,6 +1,7 @@
 (function () {
 
     const gallery = document.querySelector('#gallery')
+    const imageContainer = gallery.querySelector('.image-container')
     const loader = document.querySelector('#loader')
     const URL = gallery.dataset.url
     const startOffset = gallery.dataset.offset
@@ -24,7 +25,7 @@
             imageEl.addEventListener('click', openLightbox)
             imageEl.addEventListener('touch', openLightbox)
 
-            gallery.insertBefore(imageEl, loader)
+            imageContainer.appendChild(imageEl)
         })
     }
 
@@ -36,26 +37,20 @@
         loader.classList.add('loading')
     }
 
-    // not yet working
-    const hasMoreimages = (page, limit, total) => {
-        const startIndex = (page - 1) * limit + 1;
-        return total === 0 || startIndex < total;
-    };
-
     const loadimages = async (offset) => {
         showLoader();
 
         setTimeout(async () => {
-
             try {
-                if (true || hasMoreimages(page, limit, total)) {
-                    const response = await getImages(offset)
-                    if (response.success) {
-                        showImages(response.images)
-                        currentOffset = response.offset
-                    } else {
-                        loadMore = false
-                    }
+                const response = await getImages(offset)
+                if (response.success) {
+                    showImages(response.images)
+                    currentOffset = response.offset
+                } else {
+                    loadMore = false
+                    loader.disabled = true
+                    loader.classList.add('disabled')
+                    loader.innerHTML = 'no more images'
                 }
             } catch (error) {
                 console.log(error.message)
@@ -70,15 +65,15 @@
     let loadMore = true
     let lockLoad = false
 
-    window.onscroll = function() {
-        var pageHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,  document.documentElement.clientHeight,  document.documentElement.scrollHeight,  document.documentElement.offsetHeight );
-        if ((window.innerHeight + window.scrollY) >= pageHeight - 100) {
-            if (lockLoad) return
-            lockLoad = true
+    function loadBtn () {
+        if (lockLoad) return
+        lockLoad = true
 
-            if (loadMore) {
-                loadimages(currentOffset)
-            }
+        if (loadMore) {
+            loadimages(currentOffset)
         }
     }
-})();
+
+    loader.addEventListener('click', loadBtn)
+    loader.addEventListener('touch', loadBtn)
+})()

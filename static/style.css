@@ -290,6 +290,7 @@ canvas {
     top: 100vh;
     width: 100%;
     min-height: 101vh;
+    padding-top: 16px;
     background: #111;
 }
 #gallery .image-container {

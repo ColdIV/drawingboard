@@ -401,7 +401,7 @@ function saveCanvas (e) {
         const formData = new FormData()
         formData.append('file', blob, 'filename')
         
-        document.querySelector('body').classList.add('loading')
+        document.querySelector('#wrapper').classList.add('loading')
         let url = saveButton.dataset.url
         fetch(url, {
             method:"POST",
@@ -419,12 +419,12 @@ function saveCanvas (e) {
             image.addEventListener('click', openLightbox)
             image.addEventListener('touch', openLightbox)
 
-            document.querySelector('body').classList.remove('loading')
+            document.querySelector('#wrapper').classList.remove('loading')
             resetCanSave()
         }).catch(err => {
             // error
             showAlert('failed to save image', 'error')
-            document.querySelector('body').classList.remove('loading')
+            document.querySelector('#wrapper').classList.remove('loading')
             resetCanSave()
         })
     })

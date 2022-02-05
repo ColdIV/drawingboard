@@ -414,7 +414,7 @@ function saveCanvas (e) {
             showAlert('image saved', 'success')
             var image = document.createElement('img')
             image.src = URL.createObjectURL(blob)
-            document.querySelector('#gallery').prepend(image)
+            document.querySelector('#gallery .image-container').prepend(image)
 
             image.addEventListener('click', openLightbox)
             image.addEventListener('touch', openLightbox)
@@ -477,7 +477,7 @@ function report () {
     }).then(response => {
         // success
         showAlert('image removed for review', 'success')
-        document.querySelectorAll('#gallery img').forEach((e) => {
+        document.querySelectorAll('#gallery .image-container img').forEach((e) => {
             if (image == e.src) {
                 e.remove()
             }
@@ -517,7 +517,7 @@ function report () {
     closeButton.addEventListener(e, closeLightbox)
     document.querySelector('#lightbox').addEventListener(e, closeLightbox)
     document.querySelector('#lightbox .lightbox-wrapper').addEventListener(e, function(event){event.stopPropagation()}, false)
-    document.querySelectorAll('#gallery img').forEach((el) => {
+    document.querySelectorAll('#gallery .image-container img').forEach((el) => {
         el.addEventListener(e, openLightbox)
     })
 

@@ -1,10 +1,18 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
+    <div style="margin-bottom: 16px;">
+        <a href="/">← Back to Drawing Board</a>
+        <a style="float: right;" href="/logout">Logout</a>
+    </div>
+
     <div id="no-more-tables">
         <table class="table table-striped table-bordered table-hover model-list cf">
             <thead class="cf">
                 <tr>
+                    <th class="column-header">
+                        Preview
+                    </th>
                     <th class="column-header">
                         Name
                     </th>
@@ -16,18 +24,32 @@
             <tbody>
             {% for image in images %}
                 <tr>
+                    <td style="text-align: center; max-width: 150px; width: 150px;">
+                        <a href="../static/art/{{image.name}}" target="_blank">
+                            <img loading="lazy" style="background-color: #111 ;"src="../static/art/{{image.name}}" alt="{{image.name}}" width="100px" height="100px">
+                        </a>
+                    </td>
                     <td>
                         <a href="../static/art/{{image.name}}" target="_blank">{{image.name}}</a>
                     </td>
-                    <td>
-                        <form method="post" style="margin:0;">
+                    <td style="display: flex;">
+                        <form method="post" style="margin:0 8px 0 0;">
                             <input type="hidden" name="delete" value="{{image.name}}">
                             <input class="btn btn-danger" type="submit" value="Delete File">
+                        </form>
+                        <form method="post" style="margin:0;">
+                            <input type="hidden" name="verify" value="{{image.name}}">
+                            <input class="btn btn-success" type="submit" value="Verify">
                         </form>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <div style="margin-top: 16px;">
+        <a href="/">← Back to Drawing Board</a>
+        <a style="float: right;" href="/logout">Logout</a>
     </div>
 {% endblock %}

@@ -57,11 +57,16 @@ class MyAdminIndexView(AdminIndexView):
     @expose('/', methods=('GET', 'POST'))
     def index_view(self):
         deleteFile = request.form.get('delete')
+        verifyImage = request.form.get('verify')
         if deleteFile:
             image = Art.query.filter_by(flag = True, verified = False, name = deleteFile).first()
             db.session.delete(image)
             db.session.commit()
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], deleteFile))
+        
+        if verifyImage:
+            num_rows_updated = Art.query.filter_by(name = verifyImage).update(dict(verified=True))
+            db.session.commit()
 
         return self.render('admin/index.html')
 

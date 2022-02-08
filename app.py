@@ -13,13 +13,14 @@ import sys
 from waitress import serve
 import configparser
 import json
+from datetime import datetime
 
 config = configparser.RawConfigParser()
 config.read('.config')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
+app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/art.db'
 app.config['SECRET_KEY'] = config['app']['secret']
 app.config['UPLOAD_FOLDER'] = 'static/art'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
@@ -45,6 +46,7 @@ class Art(db.Model):
     name = db.Column(db.String(100), unique=True)
     flag = db.Column(db.Boolean, default=False)
     verified = db.Column(db.Boolean, default=False)
+    date = db.Column(db.Date, default=datetime.now())
 
 class MyModelView(ModelView):
     def is_accessible(self):
@@ -90,7 +92,15 @@ def index():
     limit = 100
     images = Art.query.order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
-    return render_template('index.html', images=images, path=path, offset=limit)
+
+    years = []
+    currentYear = datetime.now().year
+    for year in range(2022, currentYear + 1):
+        years.append(year)
+
+    months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+    return render_template('index.html', images=images, path=path, offset=limit, years=years, months=months)
 
 @app.route('/load/<offset>')
 def load(offset = 0):

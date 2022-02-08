@@ -54,6 +54,18 @@
             <span id="hideCanvas" title="Show images">🖼</span>
         </div>
         <div id="gallery" data-offset="{{offset}}" data-url="/load/">
+            <div id="filter">
+                <select name="year" id="year">
+                    {% for year in years %}
+                    <option value="{{year}}">{{year}}</option>
+                    {% endfor %}
+                </select>
+                <select name="month" id="month">
+                    {% for month in months %}
+                    <option value="{{ loop.index - 1 }}">{{month}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="image-container">    
                 {% for image in images %}
                 {% if not image.flag or image.verified %}

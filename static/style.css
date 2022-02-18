@@ -620,3 +620,27 @@ body.show-lightbox #lightbox {
     height: 10px;
     border-width: 2px;
 }
+
+#filter {
+    display: flex;
+    justify-content: center;    
+    padding-bottom: 16px;
+}
+
+select {
+    padding: 8px 16px;
+    background-color: #000;
+    color: #ccc;
+    border: 0;
+    outline: none;
+    cursor: pointer;
+    text-transform: lowercase;
+    font-family: Verdana, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+select + select {
+    margin-left: 16px;
+}

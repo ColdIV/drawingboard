@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, extract
 from flask_admin import Admin , AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
@@ -89,7 +89,7 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    limit = 100
+    limit = 45
     images = Art.query.order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
 
@@ -120,6 +120,41 @@ def load(offset = 0):
 
     response['offset'] = offset + limit
     images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).offset(offset).limit(limit).all()
+    path = app.config['UPLOAD_FOLDER']
+    
+    response['images'] = []
+    for img in images:
+        response['images'].append({
+            'verified': img.verified,
+            'path': path + '/' + img.name
+        })
+    
+    if len(response['images']) == 0:
+        response['success'] = False
+        response['errors'].append('No images found')
+    
+    return json.dumps(response)
+
+@app.route('/filter/<year>/<month>')
+def filter(year = None, month = None):
+    # max number of images to load
+    limit = 45
+
+    response = {}
+    response['success'] = True
+    response['errors'] = []
+
+    try:
+        year = int(year)
+        month = int(month)
+    except ValueError:
+        response['success'] = False
+        response['errors'].append('Date is malformed.')
+        return json.dumps(response)
+
+    response['year'] = year
+    response['month'] = month
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(extract('year', Art.date) == year, extract('month', Art.date) == month)).order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
     
     response['images'] = []

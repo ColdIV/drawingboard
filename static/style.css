@@ -620,3 +620,13 @@ body.show-lightbox #lightbox {
     height: 10px;
     border-width: 2px;
 }
+
+.image-wrapper.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-wrapper.loading:after {
+    top: 132px;
+}

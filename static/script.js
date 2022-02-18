@@ -466,7 +466,7 @@ function report () {
     const formData = new FormData()
     formData.append('image', filename)
 
-    document.querySelector('body').classList.add('loading')
+    document.querySelector('.image-wrapper').classList.add('loading')
     let url = reportButton.dataset.url
     fetch(url, {
         method:"POST",
@@ -483,12 +483,12 @@ function report () {
             }
         })
         closeLightbox()
-        document.querySelector('body').classList.remove('loading')
+        document.querySelector('.image-wrapper').classList.remove('loading')
     }).catch(err => {
         // error
         showAlert('failed to report image', 'error')
         closeLightbox()
-        document.querySelector('body').classList.remove('loading')
+        document.querySelector('.image-wrapper').classList.remove('loading')
     });
 }
 

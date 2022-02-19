@@ -629,9 +629,9 @@ body.show-lightbox #lightbox {
 
 select {
     padding: 8px 16px;
-    background-color: #000;
+    background-color: transparent;
+    border: 2px solid #000;
     color: #ccc;
-    border: 0;
     outline: none;
     cursor: pointer;
     text-transform: lowercase;
@@ -641,8 +641,23 @@ select {
     font-size: 13px;
 }
 
-select + select {
+select option {
+    color: #000
+}
+
+select + select,
+select + label {
     margin-left: 16px;
+}
+
+#filter label {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    text-transform: lowercase;
+}
+
 .image-wrapper.loading {
     display: flex;
     justify-content: center;

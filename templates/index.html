@@ -55,12 +55,14 @@
         </div>
         <div id="gallery" data-offset="{{offset}}" data-url="/load/">
             <div id="filter" data-url="/filter/">
+                <label for="year">Year</label>
                 <select name="year" id="year">
                     <option value="0">All</option>
                     {% for year in years %}
                     <option value="{{year}}">{{year}}</option>
                     {% endfor %}
                 </select>
+                <label for="month">Month</label>
                 <select name="month" id="month">
                     {% for month in months %}
                     <option value="{{ loop.index - 1 }}">{{month}}</option>

@@ -587,32 +587,43 @@ body.show-lightbox #lightbox {
 }
 
 #loader {
-    position: relative;
     margin: 2rem auto;
+}
+
+#loader,
+#reset {
+    position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
     padding-right: 16px;
     transition: padding-right .125s;
 }
 
-#loader.loading {
+#loader.loading,
+#reset.loading {
     padding-right: 36px;
     transition: padding-right .125s;
 }
 
-#loader.disabled {
+#loader.disabled,
+#reset.disabled {
     user-select: none;
     pointer-events: none;
 }
+
 #loader.disabled:hover,
 #loader.disabled:focus,
-#loader.disabled:active {
+#loader.disabled:active,
+#reset.disabled:hover,
+#reset.disabled:focus,
+#reset.disabled:active {
     background-color: transparent;
 }
 
-#loader.loading:after {
+#loader.loading:after,
+#reset.loading:after {
     margin-top: 0;
     top: initial;
     right: 10px;
@@ -645,10 +656,16 @@ select option {
     color: #000
 }
 
+#filter select + button,
 select + select,
 select + label {
     margin-left: 16px;
 }
+
+#filter button {
+    background-color: #000;
+}
+
 
 #filter label {
     background-color: #000;

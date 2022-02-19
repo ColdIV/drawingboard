@@ -137,9 +137,6 @@ def load(offset = 0):
 
 @app.route('/filter/<year>/<month>')
 def filter(year = None, month = None):
-    # max number of images to load
-    limit = 45
-
     response = {}
     response['success'] = True
     response['errors'] = []
@@ -154,7 +151,7 @@ def filter(year = None, month = None):
 
     response['year'] = year
     response['month'] = month
-    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(extract('year', Art.date) == year, extract('month', Art.date) == month)).order_by(Art.name.desc()).limit(limit).all()
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(extract('year', Art.date) == year, extract('month', Art.date) == month)).order_by(Art.name.desc()).all()
     path = app.config['UPLOAD_FOLDER']
     
     response['images'] = []

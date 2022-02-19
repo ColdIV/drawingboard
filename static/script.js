@@ -146,7 +146,6 @@ function draw() {
     ctx.lineJoin = ctx.lineCap = 'round'
     ctx.stroke()
     ctx.closePath()
-    cPush()
     if (eraser) {
         ctx.fillStyle = tmpColor
         ctx.strokeStyle = tmpColor
@@ -176,12 +175,15 @@ function findxy(res, e) {
             }
             ctx.arc(currX, currY, (y * brushSize) / 2, 0, 2 * Math.PI, false)
             ctx.fill();
-            cPush()
             ctx.closePath()
             dot_flag = false
         }
     }
     if (res == 'up' || res == "out") {
+        if (flag === true && res === 'up') {
+            cPush()
+        }
+
         flag = false
     }
     if (res == 'move') {
@@ -466,7 +468,7 @@ function report () {
     const formData = new FormData()
     formData.append('image', filename)
 
-    document.querySelector('body').classList.add('loading')
+    document.querySelector('.image-wrapper').classList.add('loading')
     let url = reportButton.dataset.url
     fetch(url, {
         method:"POST",
@@ -483,12 +485,12 @@ function report () {
             }
         })
         closeLightbox()
-        document.querySelector('body').classList.remove('loading')
+        document.querySelector('.image-wrapper').classList.remove('loading')
     }).catch(err => {
         // error
         showAlert('failed to report image', 'error')
         closeLightbox()
-        document.querySelector('body').classList.remove('loading')
+        document.querySelector('.image-wrapper').classList.remove('loading')
     });
 }
 
@@ -524,37 +526,8 @@ function report () {
     reportButton.addEventListener(e, report)
 })
 
+undoButton.addEventListener('click', undo)
+undoButton.addEventListener('touch', undo)
+
 // prevent flashing on load, so start with display: none
 additionalControls.style.display = 'flex';
-
-var intervalTimeout
-var intervalTimeoutType = 'timeout'
-
-function destroyInterval (e) {
-    e.preventDefault()
-    if (intervalTimeoutType == 'timeout') {
-        clearTimeout(intervalTimeout)
-    } else {
-        clearInterval(intervalTimeout)
-    }
-    intervalTimeoutType = 'timeout'
-}
-
-function createInterval (e) {
-    e.preventDefault()
-    undo()
-    intervalTimeout = setTimeout(() => {
-        intervalTimeoutType = 'interval'
-        intervalTimeout = setInterval(() => {
-            undo()
-        }, 50)
-    }, 100)
-}
-
-undoButton.addEventListener('mousedown', createInterval)
-undoButton.addEventListener('touchstart', createInterval)
-
-undoButton.addEventListener('mouseup', destroyInterval)
-undoButton.addEventListener('mouseout', destroyInterval)
-undoButton.addEventListener('touchend', destroyInterval)
-undoButton.addEventListener('touchcancel', destroyInterval)

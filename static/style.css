@@ -26,10 +26,13 @@ a {
     width: 100%;
     padding-top: 10%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-flow: column;
     position: relative;
+    height: 100vh;
+    min-height: 800px;
+    box-sizing: border-box;
 }
 
 #wrapper .info > div {
@@ -286,9 +289,6 @@ canvas {
 }
 
 #gallery {
-    position: absolute;
-    top: 100vh;
-    width: 100%;
     min-height: 101vh;
     padding-top: 16px;
     background: #111;
@@ -643,4 +643,12 @@ select {
 
 select + select {
     margin-left: 16px;
+.image-wrapper.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-wrapper.loading:after {
+    top: 132px;
 }

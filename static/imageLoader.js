@@ -28,7 +28,7 @@
     const showImages = (images) => {
         images.forEach(image => {
             const imageEl = document.createElement('img')
-            imageEl.dataset.verified = image.verified
+            imageEl.dataset.verified = (image.verified) ? 'True' : 'False'
             imageEl.src = image.path
             imageEl.addEventListener('click', openLightbox)
             imageEl.addEventListener('touch', openLightbox)

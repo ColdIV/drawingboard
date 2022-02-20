@@ -5,9 +5,17 @@
     const loader = document.querySelector('#loader')
     const URL = gallery.dataset.url
     const startOffset = gallery.dataset.offset
+    const filter = document.querySelector('#filter')
+    const yearContainer = filter.querySelector('#year')
+    const monthContainer = filter.querySelector('#month')
+    const resetButton = filter.querySelector('#reset')
 
-    const getImages = async (offset) => {
-        const API_URL = URL + offset
+    const getImages = async (offset, year = 0, month = 0, fresh = false) => {
+        let API_URL = URL + offset + ((year + month) == 0 ? '' : '/' + year + '/' + month)
+        if (fresh) {
+            // fresh request should provide a higher limit
+            API_URL = URL + offset + '/' + year + '/' + month + '/True'
+        }
         const response = await fetch(API_URL)
         
         if (!response.ok) {
@@ -20,7 +28,7 @@
     const showImages = (images) => {
         images.forEach(image => {
             const imageEl = document.createElement('img')
-            imageEl.dataset.verified = image.verified
+            imageEl.dataset.verified = (image.verified) ? 'True' : 'False'
             imageEl.src = image.path
             imageEl.addEventListener('click', openLightbox)
             imageEl.addEventListener('touch', openLightbox)
@@ -31,18 +39,28 @@
 
     const hideLoader = () => {
         loader.classList.remove('loading')
+        resetButton.classList.remove('loading')
     }
 
     const showLoader = () => {
         loader.classList.add('loading')
     }
 
-    const loadimages = async (offset) => {
-        showLoader();
+    const enableLoader = () => {
+        loadMore = true
+        loader.disabled = false
+        loader.classList.remove('disabled')
+        loader.innerHTML = 'load more'
+    }
+
+    const loadimages = async (offset, year = 0, month = 0, fresh = false) => {
+        if (fresh == false) {
+            showLoader();
+        }
 
         setTimeout(async () => {
             try {
-                const response = await getImages(offset)
+                const response = await getImages(offset, year, month, fresh)
                 if (response.success) {
                     showImages(response.images)
                     currentOffset = response.offset
@@ -70,10 +88,47 @@
         lockLoad = true
 
         if (loadMore) {
-            loadimages(currentOffset)
+            year = parseInt(yearContainer.value)
+            month = parseInt(monthContainer.value)
+            loadimages(currentOffset, year, month)
         }
     }
 
     loader.addEventListener('click', loadBtn)
     loader.addEventListener('touch', loadBtn)
+
+
+    function updateFilter () {
+        imageContainer.innerHTML = ''
+        if (lockLoad) return
+        lockLoad = true
+
+        enableLoader()
+
+        year = parseInt(yearContainer.value)
+        month = parseInt(monthContainer.value)
+        loadimages(0, year, month, true)
+    }
+
+    function reset () {
+        yearContainer.value = 0
+        monthContainer.value = 0
+        resetButton.classList.add('loading')
+        year = 0
+        month = 0
+
+        imageContainer.innerHTML = ''
+        if (lockLoad) return
+        lockLoad = true
+
+        enableLoader()
+
+        loadimages(0, year, month, true)
+
+    }
+
+    monthContainer.addEventListener('change', updateFilter)
+    yearContainer.addEventListener('change', updateFilter)
+    resetButton.addEventListener('click', reset)
+    resetButton.addEventListener('touch', reset)
 })()

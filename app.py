@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, extract
 from flask_admin import Admin , AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
@@ -13,13 +13,14 @@ import sys
 from waitress import serve
 import configparser
 import json
+from datetime import datetime
 
 config = configparser.RawConfigParser()
 config.read('.config')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/drawingBoardData.db'
+app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///db/art.db'
 app.config['SECRET_KEY'] = config['app']['secret']
 app.config['UPLOAD_FOLDER'] = 'static/art'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
@@ -45,6 +46,7 @@ class Art(db.Model):
     name = db.Column(db.String(100), unique=True)
     flag = db.Column(db.Boolean, default=False)
     verified = db.Column(db.Boolean, default=False)
+    date = db.Column(db.Date, default=datetime.now())
 
 class MyModelView(ModelView):
     def is_accessible(self):
@@ -87,19 +89,44 @@ admin.add_view(MyModelView(Art, db.session))
 
 @app.route('/')
 def index():
-    limit = 100
-    images = Art.query.order_by(Art.name.desc()).limit(limit).all()
+    limit = 45
     path = app.config['UPLOAD_FOLDER']
-    return render_template('index.html', images=images, path=path, offset=limit)
+
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).limit(limit).all()
+
+    years = []
+    currentYear = datetime.now().year
+    for year in range(2022, currentYear + 1):
+        years.append(year)
+
+    months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+    return render_template('index.html', images=images, path=path, offset=limit, years=years, months=months)
 
 @app.route('/load/<offset>')
-def load(offset = 0):
+@app.route('/load/<offset>/<year>/<month>')
+@app.route('/load/<offset>/<year>/<month>/<fresh>')
+def load(offset = 0, year = 0, month = 0, fresh = False):
     # max number of images to load
     limit = 18
+
+    if fresh == 'True':
+        # Should be the same as in index()
+        limit = 45
 
     response = {}
     response['success'] = True
     response['errors'] = []
+
+    try:
+        year = int(year)
+        month = int(month)
+    except ValueError:
+        response['success'] = False
+        response['errors'].append('Date is malformed.')
+        return json.dumps(response)
+    response['year'] = year
+    response['month'] = month
 
     try:
         offset = int(offset)
@@ -109,7 +136,7 @@ def load(offset = 0):
         return json.dumps(response)
 
     response['offset'] = offset + limit
-    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).offset(offset).limit(limit).all()
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(or_(year == 0, extract('year', Art.date) == year), or_(month == 0, extract('month', Art.date) == month))).order_by(Art.name.desc()).offset(offset).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
     
     response['images'] = []

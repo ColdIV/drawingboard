@@ -291,6 +291,7 @@ canvas {
 #gallery {
     min-height: 101vh;
     padding-top: 16px;
+    padding-bottom: 32px;
     background: #111;
 }
 #gallery .image-container {
@@ -587,38 +588,89 @@ body.show-lightbox #lightbox {
 }
 
 #loader {
-    position: relative;
     margin: 2rem auto;
+}
+
+#loader,
+#reset {
+    position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
     padding-right: 16px;
     transition: padding-right .125s;
 }
 
-#loader.loading {
+#loader.loading,
+#reset.loading {
     padding-right: 36px;
     transition: padding-right .125s;
 }
 
-#loader.disabled {
+#loader.disabled,
+#reset.disabled {
     user-select: none;
     pointer-events: none;
 }
+
 #loader.disabled:hover,
 #loader.disabled:focus,
-#loader.disabled:active {
+#loader.disabled:active,
+#reset.disabled:hover,
+#reset.disabled:focus,
+#reset.disabled:active {
     background-color: transparent;
 }
 
-#loader.loading:after {
+#loader.loading:after,
+#reset.loading:after {
     margin-top: 0;
     top: initial;
     right: 10px;
     width: 10px;
     height: 10px;
     border-width: 2px;
+}
+
+#filter {
+    display: flex;
+    justify-content: center;    
+    padding-bottom: 32px;
+}
+
+select {
+    padding: 8px 16px;
+    background-color: #000;
+    border: 0;
+    color: #ccc;
+    outline: none;
+    cursor: pointer;
+    text-transform: lowercase;
+    font-family: Verdana, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+#filter select + button,
+select + select,
+select + label {
+    margin-left: 16px;
+}
+
+#filter button {
+    background-color: #000;
+}
+
+
+#filter label {
+    background-color: transparent;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    text-transform: lowercase;
 }
 
 .image-wrapper.loading {
@@ -629,4 +681,31 @@ body.show-lightbox #lightbox {
 
 .image-wrapper.loading:after {
     top: 132px;
+}
+
+@media (max-width: 500px) {
+    #filter {
+        flex-flow: column;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 32px;
+        padding-bottom: 48px;
+        box-sizing: border-box;
+    }
+
+    #filter button,
+    #filter select,
+    #filter label,
+    #filter select + button,
+    #filter select + select,
+    #filter select + label {
+        width: 100%;
+        margin: 0;
+        margin-top: 12px;
+        box-sizing: border-box;
+    }
+
+    #filter #reset.loading {
+        padding-right: 16px;
+    }
 }

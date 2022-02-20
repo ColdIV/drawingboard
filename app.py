@@ -90,8 +90,9 @@ admin.add_view(MyModelView(Art, db.session))
 @app.route('/')
 def index():
     limit = 45
-    images = Art.query.order_by(Art.name.desc()).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
+
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).limit(limit).all()
 
     years = []
     currentYear = datetime.now().year
@@ -103,40 +104,16 @@ def index():
     return render_template('index.html', images=images, path=path, offset=limit, years=years, months=months)
 
 @app.route('/load/<offset>')
-def load(offset = 0):
+@app.route('/load/<offset>/<year>/<month>')
+@app.route('/load/<offset>/<year>/<month>/<fresh>')
+def load(offset = 0, year = 0, month = 0, fresh = False):
     # max number of images to load
     limit = 18
 
-    response = {}
-    response['success'] = True
-    response['errors'] = []
+    if fresh == 'True':
+        # Should be the same as in index()
+        limit = 45
 
-    try:
-        offset = int(offset)
-    except ValueError:
-        response['success'] = False
-        response['errors'].append('Offset is not an integer.')
-        return json.dumps(response)
-
-    response['offset'] = offset + limit
-    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).order_by(Art.name.desc()).offset(offset).limit(limit).all()
-    path = app.config['UPLOAD_FOLDER']
-    
-    response['images'] = []
-    for img in images:
-        response['images'].append({
-            'verified': img.verified,
-            'path': path + '/' + img.name
-        })
-    
-    if len(response['images']) == 0:
-        response['success'] = False
-        response['errors'].append('No images found')
-    
-    return json.dumps(response)
-
-@app.route('/filter/<year>/<month>')
-def filter(year = None, month = None):
     response = {}
     response['success'] = True
     response['errors'] = []
@@ -148,10 +125,18 @@ def filter(year = None, month = None):
         response['success'] = False
         response['errors'].append('Date is malformed.')
         return json.dumps(response)
-
     response['year'] = year
     response['month'] = month
-    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(extract('year', Art.date) == year, extract('month', Art.date) == month)).order_by(Art.name.desc()).all()
+
+    try:
+        offset = int(offset)
+    except ValueError:
+        response['success'] = False
+        response['errors'].append('Offset is not an integer.')
+        return json.dumps(response)
+
+    response['offset'] = offset + limit
+    images = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(and_(or_(year == 0, extract('year', Art.date) == year), or_(month == 0, extract('month', Art.date) == month))).order_by(Art.name.desc()).offset(offset).limit(limit).all()
     path = app.config['UPLOAD_FOLDER']
     
     response['images'] = []

@@ -291,6 +291,7 @@ canvas {
 #gallery {
     min-height: 101vh;
     padding-top: 16px;
+    padding-bottom: 32px;
     background: #111;
 }
 #gallery .image-container {
@@ -635,13 +636,13 @@ body.show-lightbox #lightbox {
 #filter {
     display: flex;
     justify-content: center;    
-    padding-bottom: 16px;
+    padding-bottom: 32px;
 }
 
 select {
     padding: 8px 16px;
-    background-color: transparent;
-    border: 2px solid #000;
+    background-color: #000;
+    border: 0;
     color: #ccc;
     outline: none;
     cursor: pointer;
@@ -650,10 +651,6 @@ select {
     font-variant: small-caps;
     letter-spacing: 1px;
     font-size: 13px;
-}
-
-select option {
-    color: #000
 }
 
 #filter select + button,
@@ -668,7 +665,8 @@ select + label {
 
 
 #filter label {
-    background-color: #000;
+    background-color: transparent;
+    color: #ccc;
     display: flex;
     align-items: center;
     padding: 8px 16px;

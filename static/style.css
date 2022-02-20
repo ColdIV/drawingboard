@@ -682,3 +682,30 @@ select + label {
 .image-wrapper.loading:after {
     top: 132px;
 }
+
+@media (max-width: 500px) {
+    #filter {
+        flex-flow: column;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 32px;
+        padding-bottom: 48px;
+        box-sizing: border-box;
+    }
+
+    #filter button,
+    #filter select,
+    #filter label,
+    #filter select + button,
+    #filter select + select,
+    #filter select + label {
+        width: 100%;
+        margin: 0;
+        margin-top: 12px;
+        box-sizing: border-box;
+    }
+
+    #filter #reset.loading {
+        padding-right: 16px;
+    }
+}

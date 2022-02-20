@@ -46,6 +46,13 @@
         loader.classList.add('loading')
     }
 
+    const enableLoader = () => {
+        loadMore = true
+        loader.disabled = false
+        loader.classList.remove('disabled')
+        loader.innerHTML = 'load more'
+    }
+
     const loadimages = async (offset, year = 0, month = 0, fresh = false) => {
         if (fresh == false) {
             showLoader();
@@ -96,6 +103,8 @@
         if (lockLoad) return
         lockLoad = true
 
+        enableLoader()
+
         year = parseInt(yearContainer.value)
         month = parseInt(monthContainer.value)
         loadimages(0, year, month, true)
@@ -112,10 +121,7 @@
         if (lockLoad) return
         lockLoad = true
 
-        loadMore = true
-        loader.disabled = false
-        loader.classList.remove('disabled')
-        loader.innerHTML = 'load more'
+        enableLoader()
 
         loadimages(0, year, month, true)
 

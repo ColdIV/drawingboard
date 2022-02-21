@@ -684,6 +684,19 @@ select + label {
     top: 132px;
 }
 
+#gallery .image-container.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 300px;
+}
+
+#gallery .image-container.loading:after {
+    top: 118px;
+    margin-top: 0;
+}
+
 @media (max-width: 500px) {
     #filter {
         flex-flow: column;

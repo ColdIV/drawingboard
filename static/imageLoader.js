@@ -40,6 +40,7 @@
     const hideLoader = () => {
         loader.classList.remove('loading')
         resetButton.classList.remove('loading')
+        imageContainer.classList.remove('loading')
     }
 
     const showLoader = () => {
@@ -56,6 +57,8 @@
     const loadimages = async (offset, year = 0, month = 0, fresh = false) => {
         if (fresh == false) {
             showLoader();
+        } else {
+            imageContainer.classList.add('loading')
         }
 
         setTimeout(async () => {

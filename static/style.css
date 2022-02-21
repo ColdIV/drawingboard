@@ -297,6 +297,7 @@ canvas {
 #gallery .image-container {
     display: grid;
     grid-template-columns: repeat( auto-fit, minmax(200px, 20fr) );
+    grid-gap: 12px 4px;
 }
 #gallery .image-container img {
     margin: 0 auto;

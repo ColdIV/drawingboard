@@ -103,6 +103,19 @@ def index():
     
     return render_template('index.html', images=images, path=path, offset=limit, years=years, months=months)
 
+@app.route('/image/<id>')
+def img(id = 0):
+
+    try:
+        id = int(id)
+    except ValueError:
+        return render_template('image.html')
+
+    path = app.config['UPLOAD_FOLDER']
+    image = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id == id).limit(1).first()
+
+    return render_template('image.html', image=image, path=path)
+
 @app.route('/load/<offset>')
 @app.route('/load/<offset>/<year>/<month>')
 @app.route('/load/<offset>/<year>/<month>/<fresh>')

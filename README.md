@@ -9,7 +9,7 @@ If you find an image that's inappropriate, you can flag it with the report butto
 
 Demo: https://www.cldv.org/drawingboard/ (Has no backend; Wont save!)
 
-**Demo is not always up to date.**
+**Demo is always outdated. Not sure if it's worth updating at this point. Most features cannot be used due to the lack of a backend.**
 
 # Setup
     git clone https://github.com/ColdIV/drawingboard.git

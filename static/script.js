@@ -367,6 +367,9 @@ function openLightbox(image) {
     } else if (verified == undefined) {
         document.querySelector('#lightbox').classList.add('no-report')
     }
+
+    var link = document.querySelector('#link-wrapper a')
+    link.href = '/image/' + image.dataset.id
     img = document.createElement('img')
     img.src = image.src
     document.querySelector('#lightbox .image-wrapper').appendChild(img)

@@ -156,7 +156,8 @@ def load(offset = 0, year = 0, month = 0, fresh = False):
     for img in images:
         response['images'].append({
             'verified': img.verified,
-            'path': path + '/' + img.name
+            'path': path + '/' + img.name,
+            'id': img.id
         })
     
     if len(response['images']) == 0:

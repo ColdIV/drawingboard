@@ -270,11 +270,15 @@ button:active {
     display: none;
 }
 #toggleCanvas #showCanvas {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #toggleCanvas.show #hideCanvas {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #toggleCanvas.show #showCanvas {
     display: none;

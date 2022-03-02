@@ -3,10 +3,29 @@
 <body>
     <div class="picture-frame-wrapper">
         <div class="picture-frame">
-            <img loading="lazy" data-verified="{{image.verified == True}}" src="../{{path}}/{{image.name}}">
-            <div class="tape">{{image.date}}</div>
+            {% if image %}
+            <img data-verified="{{image.verified == True}}" src="../{{path}}/{{image.name}}">
+            <div class="tape">{{date}}</div>
+            {% else %}
+            <div class="tape">not found</div>
+            {% endif %}
         </div>
-        <div>
+        <div class="links">
+            <div class="controls">
+                {% if previous %}
+                    <a class="button" href="/image/{{previous.id}}">prev</a>
+                {% else %}
+                    <button class="disabled">prev</button>
+                {% endif %}
+
+                <a class="button" href="/image/{{random.id}}">random</a>
+                
+                {% if next %}
+                    <a class="button" href="/image/{{next.id}}">next</a>
+                {% else %}
+                    <button class="disabled">next</button>
+                {% endif %}
+            </div>
             <a href="/">drawing board</a>
         </div>
     </div>

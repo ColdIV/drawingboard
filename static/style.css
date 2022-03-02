@@ -211,7 +211,8 @@ label:focus input[type="checkbox"] + span:before,
     user-select: none;
 }
 
-button {
+button,
+.button {
     padding: 8px 16px;
     background-color: #111;
     color: #ccc;
@@ -226,25 +227,43 @@ button {
     transition: background-color .25s, color .25s;
 }
 
-button {
+button,
+.button {
     margin-left: 8px;
 }
-button:first-of-type {
+
+button:first-of-type,
+.button:first-of-type {
     margin-left: 0;
 }
 
-button:hover {
+button + .button:first-of-type {
+    margin-left: 8px;
+}
+
+.button + button:first-of-type {
+    margin-left: 8px;
+}
+
+button:hover,
+.button:hover {
     background-color: #000;
     color: #bbb;
     
     transition: background-color .25s, color .25s;
 }
 
-button:active {
+button:active,
+.button:active {
     background-color: #252525;
     color: #ddd;
     
     transition: background-color .25s, color .25s;
+}
+
+button.disabled {
+    pointer-events: none;
+    opacity: .5;
 }
 
 #toggleCanvas {
@@ -756,6 +775,7 @@ select + label {
     box-shadow: 0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
     box-sizing: border-box;
     height: 650px;
+    min-height: 650px;
     width: 100%;
     max-width: 550px;
     position: relative;
@@ -824,28 +844,45 @@ select + label {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  .tape:after,
-  .tape:before {
+}
+.tape:after,
+.tape:before {
     background-size: .4em .4em;
     bottom: 0;
     content: '';
     position: absolute;
     top: 0;
     width: .2em;
-  }
-  .tape:after {
+}
+.tape:after {
     background-image: linear-gradient(45deg, transparent 50%, hsla(0,0%,100%,.3) 50%),
                       linear-gradient(-45deg, transparent 50%, hsla(0,0%,100%,.3) 50%);
     background-position: 0 100%;
     left: -.2em;
-  }
-  .tape:before {
+}
+.tape:before {
     background-image: linear-gradient(135deg, transparent 50%, hsla(0,0%,100%,.3) 50%),
                       linear-gradient(-135deg, transparent 50%, hsla(0,0%,100%,.3) 50%);
     background-position: 100% 100%;
     right: -.2em;
-  }
+}
+
+.links {
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+.button {
+    text-decoration: none;
+    display: inline-block;
+}
 
 @media (max-width: 500px) {
     .picture-frame {
@@ -853,6 +890,7 @@ select + label {
         border: 0;
         box-shadow: none;
         height: 520px;
+        min-height: initial;
     }
 
     .picture-frame:before,

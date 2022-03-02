@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_, or_, extract
+from sqlalchemy import and_, or_, extract, func
 from flask_admin import Admin , AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
@@ -113,8 +113,19 @@ def img(id = 0):
 
     path = app.config['UPLOAD_FOLDER']
     image = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id == id).limit(1).first()
+    
 
-    return render_template('image.html', image=image, path=path)
+    previous = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id < id).order_by(Art.id.desc()).limit(1).first()
+    next = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id > id).order_by(Art.id.asc()).limit(1).first()
+    pID = previous.id if previous else 0
+    nID = next.id if next else 0
+    random = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id != id).filter(Art.id != pID).filter(Art.id != nID).order_by(func.random()).limit(1).first()
+
+    fdate = ''
+    if image:
+        fdate = image.date.strftime("%d %b, %Y")
+
+    return render_template('image.html', image=image, date=fdate, path=path, previous=previous, next=next, random=random)
 
 @app.route('/load/<offset>')
 @app.route('/load/<offset>/<year>/<month>')

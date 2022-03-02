@@ -200,7 +200,7 @@ def save():
     filename = str(time.time()).replace('.', ''.join(chr(random.randrange(65,90)) for i in range(4))) + '.png'
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-    img = Art(name=filename, flag=False, verified=False)
+    img = Art(name=filename, flag=False, verified=False, date=datetime.now())
     db.session.add(img)
     db.session.commit()
     return 'OK'

@@ -203,14 +203,16 @@ def save():
     img = Art(name=filename, flag=False, verified=False, date=datetime.now())
     db.session.add(img)
     db.session.commit()
-    return 'OK'
+    return '{"success": true, "id": ' + str(img.id) + '}'
 
 @app.route('/report', methods=['POST'])
 def report():
-    name = request.form['image']
-    num_rows_updated = Art.query.filter_by(name = name).update(dict(flag=True))
+    id = request.form['image']
+    num_rows_updated = Art.query.filter_by(id = id).update(dict(flag=True))
     db.session.commit()
-    return 'OK'
+    if num_rows_updated > 0:
+        return '{"success": true}'
+    return '{"success": false}'
 
 if __name__ == '__main__':
     db.create_all()

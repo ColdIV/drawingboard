@@ -372,6 +372,7 @@ function openLightbox(image) {
     link.href = '/image/' + image.dataset.id
     img = document.createElement('img')
     img.src = image.src
+    img.dataset.id = image.dataset.id
     document.querySelector('#lightbox .image-wrapper').appendChild(img)
 }
 
@@ -412,13 +413,15 @@ function saveCanvas (e) {
             method:"POST",
             body:formData
         }).then(response => {
-            if (response.ok) return response
+            if (response.ok) return response.json()
             else throw Error(`Server returned ${response.status}: ${response.statusText}`)
         }).then(response => {
             // success
             showAlert('image saved', 'success')
             var image = document.createElement('img')
             image.src = URL.createObjectURL(blob)
+            image.dataset.id = response.id
+            image.dataset.verified = 'False'
             document.querySelector('#gallery .image-container').prepend(image)
 
             image.addEventListener('click', openLightbox)
@@ -466,10 +469,9 @@ function toggleBrushSize (e) {
 }
 
 function report () {
-    let image = document.querySelector('#lightbox img').src
-    let filename = image.split('/').pop()
+    let image = document.querySelector('#lightbox img').dataset.id
     const formData = new FormData()
-    formData.append('image', filename)
+    formData.append('image', image)
 
     document.querySelector('.image-wrapper').classList.add('loading')
     let url = reportButton.dataset.url
@@ -477,17 +479,21 @@ function report () {
         method:"POST",
         body:formData
     }).then(response => {
-        if (response.ok) return response
+        if (response.ok) return response.json()
         else throw Error(`Server returned ${response.status}: ${response.statusText}`)
     }).then(response => {
         // success
-        showAlert('image removed for review', 'success')
-        document.querySelectorAll('#gallery .image-container img').forEach((e) => {
-            if (image == e.src) {
-                e.remove()
-            }
-        })
-        closeLightbox()
+        if (response.success) {
+            showAlert('image removed for review', 'success')
+            document.querySelectorAll('#gallery .image-container img').forEach((e) => {
+                if (image == e.dataset.id) {
+                    e.remove()
+                }
+            })
+            closeLightbox()
+        } else {
+            showAlert('failed to report image', 'error')
+        }
         document.querySelector('.image-wrapper').classList.remove('loading')
     }).catch(err => {
         // error

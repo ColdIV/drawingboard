@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block meta %}
+    <meta property="og:title" content="Drawing Board{{title}}">
+    <meta property="og:site_name" content="Drawing Board{{title}}">
+    <meta property="og:url" content="{{domain}}">
+    <meta property="og:image" content="{{domain}}static/art/1646221723BAGT1994393.png">
+{% endblock %}
+
 {% block content %}
     <body onload="init()">
         <div id="wrapper" class="loading">
@@ -77,7 +87,7 @@
             <div class="image-container">    
                 {% for image in images %}
                 {% if not image.flag or image.verified %}
-                <img loading="lazy" data-id="{{image.id}}" data-verified="{{image.verified == True}}" src="{{path}}/{{image.name}}">
+                <img loading="lazy" data-id="{{image.id}}" data-verified="{{image.verified == True}}" src="{{path}}/{{image.name}}" alt="{{image.date}}">
                 {% endif %}
                 {% endfor %}
             </div>
@@ -90,7 +100,7 @@
                 <div class="info-wrapper">
                     <span id="closeButton">✖</span>
                     <span id="link-wrapper">
-                        <a target="_blank" href="">permalink</a>
+                        <a target="_blank" href="/image/28">permalink</a>
                     </span>
                     <button id="flagButton" data-url="/report">report</button>
                     <span id="verified">verified</span>

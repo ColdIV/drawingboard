@@ -101,7 +101,10 @@ def index():
 
     months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     
-    return render_template('index.html', images=images, path=path, offset=limit, years=years, months=months)
+    domain = request.url_root
+    title = ' - Put your thoughts on canvas!'
+    
+    return render_template('index.html', domain=domain, title=title, images=images, path=path, offset=limit, years=years, months=months)
 
 @app.route('/image/<id>')
 def img(id = 0):
@@ -121,11 +124,14 @@ def img(id = 0):
     nID = next.id if next else 0
     random = Art.query.filter(or_(and_(Art.flag == True, Art.verified == True), Art.flag == False)).filter(Art.id != id).filter(Art.id != pID).filter(Art.id != nID).order_by(func.random()).limit(1).first()
 
+    domain = request.url_root
     fdate = ''
+    title = ''
     if image:
         fdate = image.date.strftime("%d %b, %Y")
+        title = ' - ' + fdate
 
-    return render_template('image.html', image=image, date=fdate, path=path, previous=previous, next=next, random=random)
+    return render_template('image.html', domain=domain, title=title, image=image, date=fdate, path=path, previous=previous, next=next, random=random)
 
 @app.route('/load/<offset>')
 @app.route('/load/<offset>/<year>/<month>')

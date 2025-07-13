@@ -7,8 +7,6 @@ Images can be saved on the server.
 
 If you find an image that's inappropriate, you can flag it with the report button and it wont be shown until it has been reviewed manually.
 
-[Live version](https://art.cldv.org/)
-
 # Setup
     git clone https://github.com/ColdIV/drawingboard.git
     cd drawingboard
